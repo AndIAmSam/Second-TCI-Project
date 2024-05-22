@@ -11,9 +11,17 @@ import {
   Dimensions,
 } from "react-native";
 import MyBlur from "../components/MyBlur";
+import { useAuth } from "../context/AuthContext";
 
 const SignIn = ({ navigation }) => {
   const { height } = Dimensions.get("window");
+
+  const { signIn } = useAuth();
+
+  const handleSignIn = () => {
+    signIn();
+  };
+
   return (
     <>
       <SafeAreaView style={styles.container}>
@@ -34,7 +42,7 @@ const SignIn = ({ navigation }) => {
               secureTextEntry={true}
             />
 
-            <TouchableOpacity style={styles.signInButton}>
+            <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
               <Text style={{ color: "white", fontWeight: "bold" }}>
                 Register
               </Text>

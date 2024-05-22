@@ -11,6 +11,7 @@ import {
   Dimensions,
 } from "react-native";
 import MyBlur from "../components/MyBlur";
+import { useAuth } from "../context/AuthContext";
 
 const SignIn = ({ navigation }) => {
   const { height } = Dimensions.get("window");
@@ -18,13 +19,13 @@ const SignIn = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const { signIn } = useAuth();
+
   const handleSignIn = () => {
-    if (username === "1" && password === "1") {
-      navigation.navigate("Welcome");
-    } else {
-      alert("Invalid username or password");
-    }
+    signIn();
   };
+
+  
 
   return (
     <>
