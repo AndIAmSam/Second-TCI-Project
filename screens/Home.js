@@ -9,19 +9,9 @@ const Home = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
-      <Text style={[styles.text, { color: theme.textColor }]}>
+      <Text style={[styles.heading, { color: theme.title }]}>
         Home Screen
       </Text>
-      <View style={styles.switchContainer}>
-        <Text style={[styles.text, { color: theme.textColor }]}>Modo Oscuro</Text>
-        <Switch
-          value={theme === "dark"}
-          onValueChange={toggleTheme}
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={theme === "dark" ? "#f4f3f4" : "#f4f3f4"}
-          ios_backgroundColor="#3e3e3e"
-        />
-      </View>
     </View>
   );
 };
@@ -31,6 +21,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
   text: {
     fontSize: 20,

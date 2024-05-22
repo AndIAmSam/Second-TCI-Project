@@ -6,13 +6,15 @@ export const ThemeProvider = ({ children }) => {
   const lightTheme = {
     backgroundColor: "#fff",
     bottomBarBackgroundColor: "#fff",
+    title: "#000",
     textColor: "#000",
-    iconBackgroundColor: "#96cf8d",
+    iconBackgroundColor: "#d9d9d9",
   };
 
   const darkTheme = {
     backgroundColor: "#000",
     bottomBarBackgroundColor: "#000",
+    title: "#fff",
     textColor: "#fff",
     iconBackgroundColor: "#3b3b3b",
   };
