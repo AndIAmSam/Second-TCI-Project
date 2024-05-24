@@ -12,8 +12,11 @@ import {
 import { ThemeContext } from "../context/ThemeContext";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Ionicons } from "@expo/vector-icons";
+import { CryptoContext } from "../context/CryptoContext";
 
 const Operations = () => {
+  const { cryptos } = useContext(CryptoContext);
+
   const cryptoData = [
     {
       id: 1,
@@ -111,7 +114,7 @@ const Operations = () => {
         Comprar Criptomonedas
       </Text>
       <View style={styles.cryptoList}>
-        {cryptoData.map((crypto) => (
+        {cryptos.map((crypto) => (
           <TouchableOpacity
             key={crypto.id}
             style={styles.cryptoButton}
@@ -158,14 +161,18 @@ const Operations = () => {
               onPress={() => setAction("buy")}
             >
               <Ionicons name="arrow-down" size={22} color="green" />
-              <Text style={[styles.buttonText, { color: theme.textColor }]}>Comprar</Text>
+              <Text style={[styles.buttonText, { color: theme.textColor }]}>
+                Comprar
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.button}
               onPress={() => setAction("sell")}
             >
               <Ionicons name="arrow-up" size={22} color="red" />
-              <Text style={[styles.buttonText, { color: theme.textColor }]}>Vender</Text>
+              <Text style={[styles.buttonText, { color: theme.textColor }]}>
+                Vender
+              </Text>
             </TouchableOpacity>
           </View>
           {action && (
@@ -193,7 +200,9 @@ const Operations = () => {
               />
               <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.button} onPress={handleConfirm}>
-                  <Text style={[styles.buttonText, { color: theme.textColor }]}>Confirmar</Text>
+                  <Text style={[styles.buttonText, { color: theme.textColor }]}>
+                    Confirmar
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.button, { backgroundColor: "#ff8585" }]}

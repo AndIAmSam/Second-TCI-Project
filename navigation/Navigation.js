@@ -10,6 +10,10 @@ import Dashboard from "../screens/Dashboard";
 import Profile from "../screens/Profile";
 import Transactions from "../screens/Transactions";
 import Operations from "../screens/Operations";
+import AdminDashboard from "../screens/admin_screens/AdminDashboard";
+import UserManagement from "../screens/admin_screens/UserManagement";
+import TransactionManagement from "../screens/admin_screens/TransactionManagement";
+import SystemConfiguration from "../screens/admin_screens/CryptoManagement";
 import { Ionicons } from "@expo/vector-icons";
 import { AuthProvider, useAuth } from "../context/AuthContext";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -99,6 +103,42 @@ const MainStack = () => {
         options={{
           tabBarIcon: ({ color }) => (
             <Octicons name="feed-person" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="A-Dashboard"
+        component={AdminDashboard}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="dashboard" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="A-UserManagement"
+        component={UserManagement}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Octicons name="feed-person" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="A-TransactionManagement"
+        component={TransactionManagement}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="compare-arrows" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="CryptoConfig"
+        component={SystemConfiguration}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 name="money-check" size={24} color={color} />
           ),
         }}
       />
