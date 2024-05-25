@@ -48,7 +48,7 @@ const SignIn = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
 
-            <Text style={{ textAlign: "center" }}>Or register with</Text>
+            {/* <Text style={{ textAlign: "center" }}>Or register with</Text>
 
             <View style={styles.buttonContainer}>
               <TouchableOpacity style={styles.button1}>
@@ -70,7 +70,7 @@ const SignIn = ({ navigation }) => {
                   style={{ width: 40, height: 40 }}
                 />
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
         </ScrollView>
       </SafeAreaView>

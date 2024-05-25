@@ -14,7 +14,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 
 const SystemConfiguration = () => {
   const { theme } = useContext(ThemeContext);
-  const { cryptos, setCryptos } = useContext(CryptoContext);
+  const cryptoData = useContext(CryptoContext);
   const [newCryptoName, setNewCryptoName] = useState("");
   const [newCryptoPrice, setNewCryptoPrice] = useState("");
   const [newCryptoAbbreviation, setNewCryptoAbbreviation] = useState("");
@@ -56,37 +56,7 @@ const SystemConfiguration = () => {
         value={newCryptoName}
         onChangeText={setNewCryptoName}
       />
-      <TextInput
-        style={[
-          styles.input,
-          { color: theme.textColor, borderColor: theme.textColor },
-        ]}
-        placeholder="Precio"
-        placeholderTextColor={theme.textColor}
-        value={newCryptoPrice}
-        onChangeText={setNewCryptoPrice}
-        keyboardType="numeric"
-      />
-      <TextInput
-        style={[
-          styles.input,
-          { color: theme.textColor, borderColor: theme.textColor },
-        ]}
-        placeholder="Abreviatura"
-        placeholderTextColor={theme.textColor}
-        value={newCryptoAbbreviation}
-        onChangeText={setNewCryptoAbbreviation}
-      />
-      <TextInput
-        style={[
-          styles.input,
-          { color: theme.textColor, borderColor: theme.textColor },
-        ]}
-        placeholder="URL del Icono"
-        placeholderTextColor={theme.textColor}
-        value={newCryptoIcon}
-        onChangeText={setNewCryptoIcon}
-      />
+
       <TouchableOpacity style={styles.button} onPress={handleAddCrypto}>
         <Text style={styles.buttonText}>Agregar Criptomoneda</Text>
       </TouchableOpacity>
@@ -95,7 +65,7 @@ const SystemConfiguration = () => {
       </Text>
 
         <FlatList
-          data={cryptos}
+          data={cryptoData}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View
@@ -104,7 +74,7 @@ const SystemConfiguration = () => {
                 { backgroundColor: theme.cardBackground },
               ]}
             >
-              <Image source={item.icon} style={styles.cryptoIcon} />
+              <Image source={{ uri: item.icon }} style={styles.cryptoIcon} />
               <View>
                 <Text style={[styles.cryptoText, { color: theme.textColor }]}>
                   {item.name}

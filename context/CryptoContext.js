@@ -1,55 +1,52 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 
 export const CryptoContext = createContext();
 
 export const CryptoProvider = ({ children }) => {
-  const [cryptos, setCryptos] = useState([
-    {
-      id: 1,
-      name: "Bitcoin",
-      price: 45000,
-      abbreviation: "BTC",
-      icon: require("../assets/bitcoin.png"),
-    },
-    {
-      id: 2,
-      name: "Ethereum",
-      price: 3000,
-      abbreviation: "ETH",
-      icon: require("../assets/ether.png"),
-    },
-    {
-      id: 3,
-      name: "Doge Coin",
-      price: 150,
-      abbreviation: "DOGE",
-      icon: require("../assets/dogecoin.png"),
-    },
-    {
-      id: 4,
-      name: "Cardano",
-      price: 150,
-      abbreviation: "ADA",
-      icon: require("../assets/cardano.webp"),
-    },
-    {
-      id: 5,
-      name: "Binance Coin",
-      price: 150,
-      abbreviation: "BNB",
-      icon: require("../assets/binance.png"),
-    },
-    {
-      id: 6,
-      name: "Tether",
-      price: 150,
-      abbreviation: "USDT",
-      icon: require("../assets/tether.png"),
-    },
-  ]);
+  const [cryptos, setCryptos] = useState([]);
+ 
+  const [marketIndexes, setMarketIndexes] = useState([]);
+
+  useEffect(() => {
+    fetchCryptoData();
+    fetchMarketIndexes();
+  }, []);
+
+  const fetchCryptoData = async () => {
+    try {
+      const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=bitcoin,ethereum,dogecoin,cardano,binancecoin,tether,ripple,litecoin,chainlink,stellar,eos,monero&order=market_cap_desc&per_page=100&page=1&sparkline=false');
+      const data = await response.json();
+      setCryptos(data.map(crypto => ({
+        id: crypto.id,
+        name: crypto.name,
+        price: crypto.current_price,
+        abbreviation: crypto.symbol.toUpperCase(),
+        icon: crypto.image,
+        change24h: crypto.price_change_percentage_24h,
+        marketCap: crypto.market_cap,
+        volume: crypto.total_volume,
+        allTimeHigh: crypto.ath,
+        allTimeLow: crypto.atl,
+      })));
+    } catch (error) {
+      console.error('Error fetching crypto data:', error);
+    }
+  };
+
+
+
+  const fetchMarketIndexes = async () => {
+    try {
+      const response = await fetch('https://api.coingecko.com/api/v3/indices');
+      const data = await response.json();
+      setMarketIndexes(data);
+    } catch (error) {
+      console.error('Error fetching market indexes:', error);
+    }
+  };
 
   return (
-    <CryptoContext.Provider value={{ cryptos, setCryptos }}>
+    <CryptoContext.Provider value={cryptos}>
       {children}
     </CryptoContext.Provider>
   );

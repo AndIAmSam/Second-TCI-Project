@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import MyBlur from "../components/MyBlur";
 import { useAuth } from "../context/AuthContext";
+import * as LocalAuthentication from "expo-local-authentication";
 
 const SignIn = ({ navigation }) => {
   const { height } = Dimensions.get("window");
@@ -25,7 +26,23 @@ const SignIn = ({ navigation }) => {
     signIn();
   };
 
-  
+  const handleFingerprintLogin = async () => {
+    const hasHardware = await LocalAuthentication.hasHardwareAsync();
+    const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+    if (hasHardware && isEnrolled) {
+      const result = await LocalAuthentication.authenticateAsync();
+      if (result.success) {
+        signIn();
+      } else {
+        Alert.alert("Authentication failed", "Please try again.");
+      }
+    } else {
+      Alert.alert(
+        "Authentication not available",
+        "Your device does not support biometric authentication."
+      );
+    }
+  };
 
   return (
     <>
@@ -69,8 +86,16 @@ const SignIn = ({ navigation }) => {
                 Sign In
               </Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.fingerprintButton}
+              onPress={handleFingerprintLogin}
+            >
+              <Text style={{ color: "white", fontWeight: "bold" }}>
+                Sign In with Fingerprint/Face
+              </Text>
+            </TouchableOpacity>
 
-            <Text style={{ textAlign: "center" }}>Or continue with</Text>
+            {/* <Text style={{ textAlign: "center" }}>Or continue with</Text>
 
             <View style={styles.buttonContainer}>
               <TouchableOpacity style={styles.button1}>
@@ -92,7 +117,7 @@ const SignIn = ({ navigation }) => {
                   style={{ width: 40, height: 40 }}
                 />
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -166,6 +191,20 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   signInButton: {
+    backgroundColor: "#6aabfd",
+    padding: 20,
+    borderRadius: 16,
+    alignItems: "center",
+    marginVertical: 30,
+    shadowColor: "#FD6D6A",
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.44,
+    shadowRadius: 10.32,
+  },
+  fingerprintButton: {
     backgroundColor: "#6aabfd",
     padding: 20,
     borderRadius: 16,

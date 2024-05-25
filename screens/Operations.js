@@ -15,52 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { CryptoContext } from "../context/CryptoContext";
 
 const Operations = () => {
-  const { cryptos } = useContext(CryptoContext);
-
-  const cryptoData = [
-    {
-      id: 1,
-      name: "Bitcoin",
-      price: 45000,
-      abbreviation: "BTC",
-      icon: require("../assets/bitcoin.png"),
-    },
-    {
-      id: 2,
-      name: "Ethereum",
-      price: 3000,
-      abbreviation: "ETH",
-      icon: require("../assets/ether.png"),
-    },
-    {
-      id: 3,
-      name: "Doge Coin",
-      price: 150,
-      abbreviation: "DOGE",
-      icon: require("../assets/dogecoin.png"),
-    },
-    {
-      id: 4,
-      name: "Cardano",
-      price: 150,
-      abbreviation: "ADA",
-      icon: require("../assets/cardano.webp"),
-    },
-    {
-      id: 5,
-      name: "Binance Coin",
-      price: 150,
-      abbreviation: "BNB",
-      icon: require("../assets/binance.png"),
-    },
-    {
-      id: 6,
-      name: "Tether",
-      price: 150,
-      abbreviation: "USDT",
-      icon: require("../assets/tether.png"),
-    },
-  ];
+  const cryptoData = useContext(CryptoContext);
 
   const { theme } = useContext(ThemeContext);
   const [selectedCrypto, setSelectedCrypto] = useState(null);
@@ -114,23 +69,26 @@ const Operations = () => {
         Comprar Criptomonedas
       </Text>
       <View style={styles.cryptoList}>
-        {cryptos.map((crypto) => (
-          <TouchableOpacity
-            key={crypto.id}
-            style={styles.cryptoButton}
-            onPress={() => handleAction(crypto)}
-          >
-            <Text
-              style={[styles.cryptoAbbreviation, { color: theme.textColor }]}
+        {cryptoData &&
+          cryptoData.map((crypto) => (
+            <TouchableOpacity
+              key={crypto.id}
+              style={styles.cryptoButton}
+              onPress={() => handleAction(crypto)}
             >
-              {crypto.abbreviation}
-            </Text>
-            <Image source={crypto.icon} style={styles.cryptoIcon} />
-            <Text style={[styles.cryptoButtonText, { color: theme.textColor }]}>
-              {crypto.name}
-            </Text>
-          </TouchableOpacity>
-        ))}
+              <Text
+                style={[styles.cryptoAbbreviation, { color: theme.textColor }]}
+              >
+                {crypto.abbreviation}
+              </Text>
+              <Image source={{ uri: crypto.icon }} style={styles.cryptoIcon} />
+              <Text
+                style={[styles.cryptoButtonText, { color: theme.textColor }]}
+              >
+                {crypto.name}
+              </Text>
+            </TouchableOpacity>
+          ))}
       </View>
 
       <Modal visible={showModal} animationType="slide">
@@ -150,8 +108,24 @@ const Operations = () => {
             Detalles de {selectedCrypto?.name}
           </Text>
           <Text style={[styles.modalText, { color: theme.textColor }]}>
-            Precio: ${selectedCrypto?.price}
+            Precio: ${selectedCrypto?.price.toLocaleString()}
           </Text>
+          <Text style={[styles.modalText, { color: theme.textColor }]}>
+            Cambio 24h: ${selectedCrypto?.change24h.toLocaleString()}
+          </Text>
+          <Text style={[styles.modalText, { color: theme.textColor }]}>
+            Market Cap: ${selectedCrypto?.marketCap.toLocaleString()}
+          </Text>
+          <Text style={[styles.modalText, { color: theme.textColor }]}>
+            Max: ${selectedCrypto?.allTimeHigh.toLocaleString()}
+          </Text>
+          <Text style={[styles.modalText, { color: theme.textColor }]}>
+            Min: ${selectedCrypto?.allTimeLow.toLocaleString()}
+          </Text>
+          <Text style={[styles.modalText, { color: theme.textColor }]}>
+            Volumen: ${selectedCrypto?.volume.toLocaleString()}
+          </Text>
+
           <Text style={[styles.modalText, { color: theme.textColor }]}>
             ¿Qué quieres hacer?
           </Text>
