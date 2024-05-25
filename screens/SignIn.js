@@ -10,7 +10,6 @@ import {
   View,
   Dimensions,
 } from "react-native";
-import MyBlur from "../components/MyBlur";
 import { useAuth } from "../context/AuthContext";
 import * as LocalAuthentication from "expo-local-authentication";
 
@@ -86,12 +85,13 @@ const SignIn = ({ navigation }) => {
                 Sign In
               </Text>
             </TouchableOpacity>
+
             <TouchableOpacity
               style={styles.fingerprintButton}
               onPress={handleFingerprintLogin}
             >
               <Text style={{ color: "white", fontWeight: "bold" }}>
-                Sign In with Fingerprint/Face
+                Enter with your Fingerprint/Face
               </Text>
             </TouchableOpacity>
 

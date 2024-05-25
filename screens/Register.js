@@ -10,7 +10,6 @@ import {
   View,
   Dimensions,
 } from "react-native";
-import MyBlur from "../components/MyBlur";
 import { useAuth } from "../context/AuthContext";
 
 const SignIn = ({ navigation }) => {
