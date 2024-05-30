@@ -47,8 +47,8 @@ const MainStack = () => {
   return (
     <Tab.Navigator
       barStyle={{ backgroundColor: theme.bottomBarBackgroundColor }}
-      activeColor={theme.textColor}
-      inactiveColor="#c0c0c0"
+      activeColor={theme.iconColor}
+      inactiveColor={theme.iconInactiveColor}
       shifting={true}
       theme={{ colors: { secondaryContainer: theme.iconBackgroundColor } }}
     >

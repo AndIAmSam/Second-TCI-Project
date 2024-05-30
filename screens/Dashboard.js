@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { View, Text, FlatList, StyleSheet, ScrollView } from "react-native";
 import { ThemeContext } from "../context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
+import SecondBlur from "../components/SecondBlur";
 
 const cryptoData = [
   { id: 1, name: "Bitcoin", balance: 2.5 },
@@ -85,61 +86,74 @@ const Dashboard = () => {
   };
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.backgroundColor }]}
-    >
-      <Text style={[styles.heading, { color: theme.title }]}>
-        Saldo de Criptomonedas
-      </Text>
-      <FlatList
-        horizontal
-        data={cryptoBalances}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.cryptoContainer}>
-            <Text style={[styles.cryptoName, { color: theme.textColor }]}>
-              {item.name}
-            </Text>
-            <Text style={[styles.balance, { color: theme.textColor }]}>
-              {item.balance}
-            </Text>
-          </View>
-        )}
-      />
-      <Text style={[styles.transactionsHeading, { color: theme.title }]}>
-        Transacciones Recientes
-      </Text>
-      <FlatList
-        data={transactions}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.transactionContainer}>
-            <View style={styles.transactionHeader}>
-              <Text style={[styles.type, { color: theme.textColor }]}>
-                {item.type}
-              </Text>
+    <>
+      <SecondBlur />
+      <View
+        style={[styles.container, { backgroundColor: theme.backgroundColor }]}
+      >
+        <Text style={[styles.heading, { color: theme.title }]}>
+          Saldo de Criptomonedas
+        </Text>
+        <FlatList
+          horizontal
+          data={cryptoBalances}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <View
+              style={[
+                styles.cryptoContainer,
+                { backgroundColor: theme.cardColor },
+              ]}
+            >
               <Text style={[styles.cryptoName, { color: theme.textColor }]}>
-                {item.crypto}
+                {item.name}
+              </Text>
+              <Text style={[styles.balance, { color: theme.textColor }]}>
+                {item.balance}
               </Text>
             </View>
-            <View style={styles.amountContainer}>
-              <Text style={[styles.amount, { color: theme.textColor }]}>
-                {renderTransactionIcon(item.type)} {item.amount}
-              </Text>
-            </View>
+          )}
+        />
+        <Text style={[styles.transactionsHeading, { color: theme.title }]}>
+          Transacciones Recientes
+        </Text>
+        <FlatList
+          data={transactions}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <View
+              style={[
+                styles.transactionContainer,
+                { backgroundColor: theme.cardColor },
+              ]}
+            >
+              <View style={styles.transactionHeader}>
+                <Text style={[styles.type, { color: theme.textColor }]}>
+                  {item.type}
+                </Text>
+                <Text style={[styles.cryptoName, { color: theme.textColor }]}>
+                  {item.crypto}
+                </Text>
+              </View>
+              <View style={styles.amountContainer}>
+                <Text style={[styles.amount, { color: theme.textColor }]}>
+                  {renderTransactionIcon(item.type)} {item.amount}
+                </Text>
+              </View>
 
-            <View style={styles.dateTimeContainer}>
-              <Text style={[styles.date, { color: theme.textColor }]}>
-                {item.date}
-              </Text>
-              <Text style={[styles.time, { color: theme.textColor }]}>
-                {item.time}
-              </Text>
+              <View style={styles.dateTimeContainer}>
+                <Text style={[styles.date, { color: theme.textColor }]}>
+                  {item.date}
+                </Text>
+                <Text style={[styles.time, { color: theme.textColor }]}>
+                  {item.time}
+                </Text>
+              </View>
             </View>
-          </View>
-        )}
-      />
-    </View>
+          )}
+        />
+      </View>
+    </>
   );
 };
 
@@ -160,8 +174,8 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     padding: 10,
-    borderRadius: 10,
-    borderWidth: 1,
+    borderRadius: 20,
+    borderWidth: 0,
     borderColor: "#ccc",
     flexDirection: "column",
     alignItems: "center",
@@ -186,7 +200,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 10,
     borderRadius: 10,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#ccc",
     width: "100%",
   },
@@ -217,9 +231,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   amountContainer: {
-    flexDirection: "column", 
+    flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center", 
+    justifyContent: "center",
   },
 });
 

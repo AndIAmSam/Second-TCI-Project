@@ -10,6 +10,7 @@ import {
   Modal,
 } from "react-native";
 import { ThemeContext } from "../../context/ThemeContext";
+import SecondBlur from "../../components/SecondBlur";
 
 const UserManagement = () => {
   const { theme } = useContext(ThemeContext);
@@ -91,109 +92,137 @@ const UserManagement = () => {
   };
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.backgroundColor }]}
-    >
-      <Text style={[styles.heading, { color: theme.textColor }]}>
-        Gestión de Usuarios
-      </Text>
-      <FlatList
-        data={users}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <View
-            style={[styles.userCard, { backgroundColor: theme.cardBackground }]}
-          >
-            <Text style={[styles.userName, { color: theme.textColor }]}>
-              {item.name}
-            </Text>
-            <Text style={[styles.userEmail, { color: theme.textColor }]}>
-              {item.email}
-            </Text>
-            {renderBalances(item.balances)}
-            <View style={styles.userActions}>
-              <TouchableOpacity
-                style={[styles.button, styles.editButton]}
-                onPress={() => handleEditUser(item)}
-              >
-                <Text style={styles.buttonText}>Editar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, styles.deleteButton]}
-                onPress={() => handleDeleteUser(item.id)}
-              >
-                <Text style={styles.buttonText}>Eliminar</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
-      />
-
-      {selectedUser && (
-        <Modal
-          visible={showEditModal}
-          animationType="slide"
-          onRequestClose={() => setShowEditModal(false)}
-        >
-          <View
-            style={[
-              styles.modalContainer,
-              { backgroundColor: theme.backgroundColor },
-            ]}
-          >
-            <Text style={[styles.modalTitle, { color: theme.textColor }]}>
-              Editar Usuario
-            </Text>
-            <TextInput
-              style={[styles.input, { color: theme.textColor }]}
-              placeholder="Nombre"
-              value={newName}
-              onChangeText={setNewName}
-            />
-            <TextInput
-              style={[styles.input, { color: theme.textColor }]}
-              placeholder="Correo Electrónico"
-              value={newEmail}
-              onChangeText={setNewEmail}
-              keyboardType="email-address"
-            />
-            {Object.keys(newBalances).map((crypto) => (
-              <View key={crypto} style={styles.balanceInputContainer}>
-                <Text style={[styles.balanceLabel, { color: theme.textColor }]}>
-                  {crypto}
-                </Text>
-                <TextInput
-                  style={[styles.input, { color: theme.textColor }]}
-                  placeholder={crypto}
-                  value={newBalances[crypto].toString()}
-                  onChangeText={(value) =>
-                    setNewBalances({
-                      ...newBalances,
-                      [crypto]: parseFloat(value),
-                    })
-                  }
-                  keyboardType="numeric"
-                />
+    <>
+      <SecondBlur />
+      <View
+        style={[styles.container, { backgroundColor: theme.backgroundColor }]}
+      >
+        <Text style={[styles.heading, { color: theme.textColor }]}>
+          Gestión de Usuarios
+        </Text>
+        <FlatList
+          data={users}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <View
+              style={[styles.userCard, { backgroundColor: theme.cardColor }]}
+            >
+              <Text style={[styles.userName, { color: theme.textColor }]}>
+                {item.name}
+              </Text>
+              <Text style={[styles.userEmail, { color: theme.textColor }]}>
+                {item.email}
+              </Text>
+              {renderBalances(item.balances)}
+              <View style={styles.userActions}>
+                <TouchableOpacity
+                  style={[
+                    styles.button,
+                    styles.editButton,
+                    { backgroundColor: theme.buttonConfirmColor },
+                  ]}
+                  onPress={() => handleEditUser(item)}
+                >
+                  <Text style={styles.buttonText}>Editar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.button, styles.deleteButton]}
+                  onPress={() => handleDeleteUser(item.id)}
+                >
+                  <Text style={styles.buttonText}>Eliminar</Text>
+                </TouchableOpacity>
               </View>
-            ))}
-            <View style={styles.modalActions}>
-              <TouchableOpacity
-                style={[styles.button, styles.saveButton]}
-                onPress={handleSaveEdit}
-              >
-                <Text style={styles.buttonText}>Guardar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.button, styles.cancelButton]}
-                onPress={() => setShowEditModal(false)}
-              >
-                <Text style={styles.buttonText}>Cancelar</Text>
-              </TouchableOpacity>
             </View>
-          </View>
-        </Modal>
-      )}
-    </View>
+          )}
+        />
+
+        {selectedUser && (
+          <Modal
+            visible={showEditModal}
+            animationType="slide"
+            onRequestClose={() => setShowEditModal(false)}
+          >
+            <View
+              style={[
+                styles.modalContainer,
+                { backgroundColor: theme.modalBackground },
+              ]}
+            >
+              <Text style={[styles.modalTitle, { color: theme.textColor }]}>
+                Editar Información
+              </Text>
+              <TextInput
+                style={[
+                  styles.input,
+                  { color: theme.textColor, backgroundColor: theme.cardColor },
+                ]}
+                placeholder="Nombre"
+                value={newName}
+                onChangeText={setNewName}
+              />
+              <TextInput
+                style={[
+                  styles.input,
+                  { color: theme.textColor, backgroundColor: theme.cardColor },
+                ]}
+                placeholder="Correo Electrónico"
+                value={newEmail}
+                onChangeText={setNewEmail}
+                keyboardType="email-address"
+              />
+              <Text style={[styles.modalTitle, { color: theme.textColor }]}>
+                Balances
+              </Text>
+              {Object.keys(newBalances).map((crypto) => (
+                <View key={crypto} style={styles.balanceInputContainer}>
+                  <Text
+                    style={[styles.balanceLabel, { color: theme.textColor }]}
+                  >
+                    {crypto}
+                  </Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      {
+                        color: theme.textColor,
+                        backgroundColor: theme.cardColor,
+                      },
+                    ]}
+                    placeholder={crypto}
+                    value={newBalances[crypto].toString()}
+                    onChangeText={(value) =>
+                      setNewBalances({
+                        ...newBalances,
+                        [crypto]: parseFloat(value),
+                      })
+                    }
+                    keyboardType="numeric"
+                  />
+                </View>
+              ))}
+              <View style={styles.modalActions}>
+                <TouchableOpacity
+                  style={[
+                    styles.button,
+                    styles.saveButton,
+                    { backgroundColor: theme.buttonConfirmColor },
+                  ]}
+                  onPress={handleSaveEdit}
+                >
+                  <Text style={styles.buttonText}>Guardar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.button, styles.cancelButton]}
+                  onPress={() => setShowEditModal(false)}
+                >
+                  <Text style={styles.buttonText}>Cancelar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        )}
+      </View>
+    </>
   );
 };
 
@@ -206,12 +235,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    marginTop: 20,
   },
   userCard: {
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#ccc",
   },
   userName: {
@@ -232,16 +262,14 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 22,
   },
-  editButton: {
-    backgroundColor: "#d9d9d9",
-  },
+  editButton: {},
   deleteButton: {
     backgroundColor: "#f18b84",
   },
   buttonText: {
-    color: "#000",
+    color: "white",
     fontWeight: "bold",
   },
   modalContainer: {
@@ -257,15 +285,16 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#ccc",
-    borderRadius: 5,
+    borderRadius: 20,
     paddingHorizontal: 10,
     marginBottom: 10,
   },
   balanceInputContainer: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-evenly",
     marginBottom: 10,
   },
   balanceLabel: {
@@ -276,9 +305,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
   },
-  saveButton: {
-    backgroundColor: "#d9d9d9",
-  },
+  saveButton: {},
   cancelButton: {
     backgroundColor: "#f18b84",
   },

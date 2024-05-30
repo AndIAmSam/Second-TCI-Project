@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { ThemeContext } from "../../context/ThemeContext";
+import SecondBlur from "../../components/SecondBlur";
 
 const AdminDashboard = () => {
   const { theme } = useContext(ThemeContext);
@@ -16,43 +17,46 @@ const AdminDashboard = () => {
   }, []);
 
   return (
-    <ScrollView
-      contentContainerStyle={[
-        styles.container,
-        { backgroundColor: theme.backgroundColor },
-      ]}
-    >
-      <Text style={[styles.heading, { color: theme.textColor }]}>
-        Dashboard del Administrador
-      </Text>
+    <>
+    <SecondBlur />
+      <ScrollView
+        contentContainerStyle={[
+          styles.container,
+          { backgroundColor: theme.backgroundColor },
+        ]}
+      >
+        <Text style={[styles.heading, { color: theme.textColor }]}>
+          Dashboard del Administrador
+        </Text>
 
-      <View style={styles.card}>
-        <Text style={[styles.cardTitle, { color: theme.textColor }]}>
-          Número de Usuarios
-        </Text>
-        <Text style={[styles.cardValue, { color: theme.textColor }]}>
-          {userCount}
-        </Text>
-      </View>
+        <View style={[styles.card, { backgroundColor: theme.cardColor }]}>
+          <Text style={[styles.cardTitle, { color: theme.textColor }]}>
+            Número de Usuarios
+          </Text>
+          <Text style={[styles.cardValue, { color: theme.textColor }]}>
+            {userCount}
+          </Text>
+        </View>
 
-      <View style={styles.card}>
-        <Text style={[styles.cardTitle, { color: theme.textColor }]}>
-          Total de Transacciones
-        </Text>
-        <Text style={[styles.cardValue, { color: theme.textColor }]}>
-          {totalTransactions}
-        </Text>
-      </View>
+        <View style={[styles.card, { backgroundColor: theme.cardColor }]}>
+          <Text style={[styles.cardTitle, { color: theme.textColor }]}>
+            Total de Transacciones
+          </Text>
+          <Text style={[styles.cardValue, { color: theme.textColor }]}>
+            {totalTransactions}
+          </Text>
+        </View>
 
-      <View style={styles.card}>
-        <Text style={[styles.cardTitle, { color: theme.textColor }]}>
-          Saldo Total Simulado
-        </Text>
-        <Text style={[styles.cardValue, { color: theme.textColor }]}>
-          ${totalBalance.toFixed(2)}
-        </Text>
-      </View>
-    </ScrollView>
+        <View style={[styles.card, { backgroundColor: theme.cardColor }]}>
+          <Text style={[styles.cardTitle, { color: theme.textColor }]}>
+            Saldo Total Simulado
+          </Text>
+          <Text style={[styles.cardValue, { color: theme.textColor }]}>
+            ${totalBalance.toFixed(2)}
+          </Text>
+        </View>
+      </ScrollView>
+    </>
   );
 };
 
@@ -70,12 +74,12 @@ const styles = StyleSheet.create({
   },
   card: {
     width: "100%",
-    borderRadius: 10,
+    borderRadius: 20,
     padding: 20,
     marginBottom: 20,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#ccc",
   },
   cardTitle: {

@@ -13,6 +13,7 @@ import { ThemeContext } from "../context/ThemeContext";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Ionicons } from "@expo/vector-icons";
 import { CryptoContext } from "../context/CryptoContext";
+import SecondBlur from "../components/SecondBlur";
 
 const Operations = () => {
   const cryptoData = useContext(CryptoContext);
@@ -21,7 +22,7 @@ const Operations = () => {
   const [selectedCrypto, setSelectedCrypto] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [action, setAction] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState("$");
   const [paymentMethod, setPaymentMethod] = useState("");
 
   const handleAction = (crypto, actionType) => {
@@ -62,134 +63,175 @@ const Operations = () => {
   };
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.backgroundColor }]}
-    >
-      <Text style={[styles.heading, { color: theme.textColor }]}>
-        Comprar Criptomonedas
-      </Text>
-      <View style={styles.cryptoList}>
-        {cryptoData &&
-          cryptoData.map((crypto) => (
-            <TouchableOpacity
-              key={crypto.id}
-              style={styles.cryptoButton}
-              onPress={() => handleAction(crypto)}
-            >
-              <Text
-                style={[styles.cryptoAbbreviation, { color: theme.textColor }]}
+    <>
+      <SecondBlur />
+      <View
+        style={[styles.container, { backgroundColor: theme.backgroundColor }]}
+      >
+        <Text style={[styles.heading, { color: theme.textColor }]}>
+          Comprar Criptomonedas
+        </Text>
+        <View style={styles.cryptoList}>
+          {cryptoData &&
+            cryptoData.map((crypto) => (
+              <TouchableOpacity
+                key={crypto.id}
+                style={[
+                  styles.cryptoButton,
+                  { backgroundColor: theme.cardColor },
+                ]}
+                onPress={() => handleAction(crypto)}
               >
-                {crypto.abbreviation}
-              </Text>
-              <Image source={{ uri: crypto.icon }} style={styles.cryptoIcon} />
-              <Text
-                style={[styles.cryptoButtonText, { color: theme.textColor }]}
-              >
-                {crypto.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
-      </View>
-
-      <Modal visible={showModal} animationType="slide">
-        <View
-          style={[
-            styles.modalContainer,
-            { backgroundColor: theme.backgroundColor },
-          ]}
-        >
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => setShowModal(false)}
-          >
-            <Icon name="times" size={20} color="#fff" />
-          </TouchableOpacity>
-          <Text style={[styles.modalTitle, { color: theme.textColor }]}>
-            Detalles de {selectedCrypto?.name}
-          </Text>
-          <Text style={[styles.modalText, { color: theme.textColor }]}>
-            Precio: ${selectedCrypto?.price.toLocaleString()}
-          </Text>
-          <Text style={[styles.modalText, { color: theme.textColor }]}>
-            Cambio 24h: ${selectedCrypto?.change24h.toLocaleString()}
-          </Text>
-          <Text style={[styles.modalText, { color: theme.textColor }]}>
-            Market Cap: ${selectedCrypto?.marketCap.toLocaleString()}
-          </Text>
-          <Text style={[styles.modalText, { color: theme.textColor }]}>
-            Max: ${selectedCrypto?.allTimeHigh.toLocaleString()}
-          </Text>
-          <Text style={[styles.modalText, { color: theme.textColor }]}>
-            Min: ${selectedCrypto?.allTimeLow.toLocaleString()}
-          </Text>
-          <Text style={[styles.modalText, { color: theme.textColor }]}>
-            Volumen: ${selectedCrypto?.volume.toLocaleString()}
-          </Text>
-
-          <Text style={[styles.modalText, { color: theme.textColor }]}>
-            ¿Qué quieres hacer?
-          </Text>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => setAction("buy")}
-            >
-              <Ionicons name="arrow-down" size={22} color="green" />
-              <Text style={[styles.buttonText, { color: theme.textColor }]}>
-                Comprar
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => setAction("sell")}
-            >
-              <Ionicons name="arrow-up" size={22} color="red" />
-              <Text style={[styles.buttonText, { color: theme.textColor }]}>
-                Vender
-              </Text>
-            </TouchableOpacity>
-          </View>
-          {action && (
-            <>
-              <Text style={[styles.modalText, { color: theme.textColor }]}>
-                Cantidad:
-              </Text>
-              <TextInput
-                style={[styles.input, { color: theme.textColor }]}
-                placeholder="Cantidad"
-                value={amount}
-                onChangeText={setAmount}
-                keyboardType="numeric"
-              />
-              <Text style={[styles.modalText, { color: theme.textColor }]}>
-                Método de {action === "buy" ? "Pago" : "Recibimiento del Pago"}:
-              </Text>
-              <TextInput
-                style={[styles.input, { color: theme.textColor }]}
-                placeholder={`Método de ${
-                  action === "buy" ? "Pago" : "Recibimiento del Pago"
-                }`}
-                value={paymentMethod}
-                onChangeText={setPaymentMethod}
-              />
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} onPress={handleConfirm}>
-                  <Text style={[styles.buttonText, { color: theme.textColor }]}>
-                    Confirmar
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.button, { backgroundColor: "#ff8585" }]}
-                  onPress={() => setShowModal(false)}
+                <Text
+                  style={[
+                    styles.cryptoAbbreviation,
+                    { color: theme.textColor },
+                  ]}
                 >
-                  <Text style={styles.buttonText}>Cancelar</Text>
-                </TouchableOpacity>
-              </View>
-            </>
-          )}
+                  {crypto.abbreviation}
+                </Text>
+                <Image
+                  source={{ uri: crypto.icon }}
+                  style={styles.cryptoIcon}
+                />
+                <Text
+                  style={[styles.cryptoButtonText, { color: theme.textColor }]}
+                >
+                  {crypto.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
         </View>
-      </Modal>
-    </View>
+
+        <Modal visible={showModal} animationType="slide">
+          <View
+            style={[
+              styles.modalContainer,
+              { backgroundColor: theme.modalBackground },
+            ]}
+          >
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setShowModal(false)}
+            >
+              <Icon name="times" size={20} color="#fff" />
+            </TouchableOpacity>
+            <Text style={[styles.modalTitle, { color: theme.textColor }]}>
+              Detalles de {selectedCrypto?.name}
+            </Text>
+            <View
+              style={[
+                styles.detailContainer,
+                { backgroundColor: theme.cardColor },
+              ]}
+            >
+              <Image
+                source={{ uri: selectedCrypto?.icon }}
+                style={styles.cryptoIcon}
+              />
+              <Text>({selectedCrypto?.abbreviation})</Text>
+              <Text style={[styles.modalText, { color: theme.textColor }]}>
+                Precio: ${selectedCrypto?.price.toLocaleString()}
+              </Text>
+              <Text style={[styles.modalText, { color: theme.textColor }]}>
+                Cambio 24h: ${selectedCrypto?.change24h.toLocaleString()}
+              </Text>
+              <Text style={[styles.modalText, { color: theme.textColor }]}>
+                Market Cap: ${selectedCrypto?.marketCap.toLocaleString()}
+              </Text>
+              <Text style={[styles.modalText, { color: theme.textColor }]}>
+                Max: ${selectedCrypto?.allTimeHigh.toLocaleString()}
+              </Text>
+              <Text style={[styles.modalText, { color: theme.textColor }]}>
+                Min: ${selectedCrypto?.allTimeLow.toLocaleString()}
+              </Text>
+              <Text style={[styles.modalText, { color: theme.textColor }]}>
+                Volumen: ${selectedCrypto?.volume.toLocaleString()}
+              </Text>
+            </View>
+
+            <Text style={[styles.modalText, { color: theme.textColor }]}>
+              ¿Qué quieres hacer?
+            </Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={[styles.button, { backgroundColor: theme.cardColor }]}
+                onPress={() => setAction("buy")}
+              >
+                <Ionicons name="arrow-down" size={22} color="green" />
+                <Text style={[styles.buttonText, { color: theme.textColor }]}>
+                  Comprar
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, { backgroundColor: theme.cardColor }]}
+                onPress={() => setAction("sell")}
+              >
+                <Ionicons name="arrow-up" size={22} color="red" />
+                <Text style={[styles.buttonText, { color: theme.textColor }]}>
+                  Vender
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {action && (
+              <>
+                <Text style={[styles.modalText, { color: theme.textColor }]}>
+                  Cantidad:
+                </Text>
+                <TextInput
+                  style={[
+                    styles.input,
+                    {
+                      color: theme.textColor,
+                      backgroundColor: theme.cardColor,
+                    },
+                  ]}
+                  placeholder="Cantidad"
+                  value={amount}
+                  onChangeText={setAmount}
+                  keyboardType="numeric"
+                />
+                {/* <Text style={[styles.modalText, { color: theme.textColor }]}>
+                  Método de{" "}
+                  {action === "buy" ? "Pago" : "Recibimiento del Pago"}:
+                </Text> */}
+                {/* <TextInput
+                  style={[
+                    styles.input,
+                    {
+                      color: theme.textColor,
+                      backgroundColor: theme.cardColor,
+                    },
+                  ]}
+                  placeholder={`Método de ${
+                    action === "buy" ? "Pago" : "Recibimiento del Pago"
+                  }`}
+                  value={paymentMethod}
+                  onChangeText={setPaymentMethod}
+                /> */}
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={[
+                      styles.button,
+                      { backgroundColor: theme.buttonConfirmColor },
+                    ]}
+                    onPress={handleConfirm}
+                  >
+                    <Text style={styles.buttonText}>Confirmar</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.button, { backgroundColor: "#ff8585" }]}
+                    onPress={() => setShowModal(false)}
+                  >
+                    <Text style={styles.buttonText}>Cancelar</Text>
+                  </TouchableOpacity>
+                </View>
+              </>
+            )}
+          </View>
+        </Modal>
+      </View>
+    </>
   );
 };
 const styles = StyleSheet.create({
@@ -214,7 +256,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 120,
     alignItems: "center",
-    borderWidth: 1,
+    borderWidth: 0,
     justifyContent: "center",
     borderColor: "#ccc",
     borderRadius: 10,
@@ -246,15 +288,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   modalText: {
-    fontSize: 16,
+    fontSize: 14,
     marginBottom: 10,
   },
   input: {
     width: "100%",
     height: 40,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#ccc",
-    borderRadius: 5,
+    borderRadius: 22,
     paddingHorizontal: 10,
     marginBottom: 10,
   },
@@ -266,18 +308,18 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   button: {
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#ccc",
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
-    marginTop: 5,
+    color: "white",
   },
   closeButton: {
     position: "absolute",
@@ -287,6 +329,12 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 12,
     borderRadius: 100,
+  },
+  detailContainer: {
+    marginBottom: 20,
+    alignItems: "center",
+    padding: 20,
+    borderRadius: 20,
   },
 });
 

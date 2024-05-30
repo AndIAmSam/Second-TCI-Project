@@ -11,6 +11,7 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { ThemeContext } from "../context/ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import SecondBlur from "../components/SecondBlur";
 
 const Transactions = () => {
   const { theme } = useContext(ThemeContext);
@@ -37,50 +38,65 @@ const Transactions = () => {
     setRecipient("");
     setCrypto("");
     setAmount("");
-    
+
     console.log("Enviando criptomonedas a:", recipient);
     console.log("Tipo de criptomoneda:", crypto);
     console.log("Cantidad:", amount);
   };
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.backgroundColor }]}
-    >
-      <Text style={[styles.heading, { color: theme.textColor }]}>
-        Enviar Criptomonedas
-      </Text>
-      <TextInput
-        style={[styles.input, { color: theme.textColor }]}
-        placeholder="Destinatario"
-        value={recipient}
-        onChangeText={setRecipient}
-      />
-      <Picker
-        selectedValue={crypto}
-        style={[styles.input, { color: theme.textColor }]}
-        onValueChange={(itemValue, itemIndex) => setCrypto(itemValue)}
+    <>
+      <SecondBlur />
+      <View
+        style={[styles.container, { backgroundColor: theme.backgroundColor }]}
       >
-        {cryptocurrencies.map((crypto) => (
-          <Picker.Item
-            key={crypto.value}
-            label={crypto.label}
-            value={crypto.value}
-          />
-        ))}
-      </Picker>
-      <TextInput
-        style={[styles.input, { color: theme.textColor }]}
-        placeholder="Cantidad"
-        value={amount}
-        onChangeText={setAmount}
-        keyboardType="numeric"
-      />
-      <TouchableOpacity style={styles.button} onPress={handleSendTransaction}>
-        <MaterialCommunityIcons name="cube-send" size={24} color="blue" />
-        <Text style={[styles.text, { color: theme.textColor }]}>Enviar crypto</Text>
-      </TouchableOpacity>
-    </View>
+        <Text style={[styles.heading, { color: theme.textColor }]}>
+          Enviar Criptomonedas
+        </Text>
+        <TextInput
+          style={[
+            styles.input,
+            { color: theme.textColor, backgroundColor: theme.cardColor },
+          ]}
+          placeholder="Destinatario"
+          value={recipient}
+          onChangeText={setRecipient}
+        />
+        <Picker
+          selectedValue={crypto}
+          style={[
+            styles.input,
+            { color: theme.textColor, backgroundColor: theme.cardColor },
+          ]}
+          onValueChange={(itemValue, itemIndex) => setCrypto(itemValue)}
+        >
+          {cryptocurrencies.map((crypto) => (
+            <Picker.Item
+              key={crypto.value}
+              label={crypto.label}
+              value={crypto.value}
+            />
+          ))}
+        </Picker>
+        <TextInput
+          style={[
+            styles.input,
+            { color: theme.textColor, backgroundColor: theme.cardColor },
+          ]}
+          placeholder="Cantidad"
+          value={amount}
+          onChangeText={setAmount}
+          keyboardType="numeric"
+        />
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: theme.buttonConfirmColor }]}
+          onPress={handleSendTransaction}
+        >
+          <MaterialCommunityIcons name="cube-send" size={24} color="white" />
+          <Text style={styles.buttonText}>Enviar crypto</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 };
 
@@ -99,20 +115,23 @@ const styles = StyleSheet.create({
   input: {
     width: "100%",
     height: 40,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#ccc",
-    borderRadius: 5,
+    borderRadius: 20,
     paddingHorizontal: 10,
     marginBottom: 10,
   },
   button: {
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#ccc",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
+    paddingVertical: 2,
+    paddingHorizontal: 24,
+    borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
+  },
+  buttonText: {
+    color: "white",
   },
 });
 

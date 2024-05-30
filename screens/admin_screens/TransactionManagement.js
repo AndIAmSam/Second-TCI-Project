@@ -12,6 +12,7 @@ import {
 import { ThemeContext } from "../../context/ThemeContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
+import SecondBlur from "../../components/SecondBlur";
 
 const TransactionManagement = () => {
   const { theme } = useContext(ThemeContext);
@@ -83,159 +84,188 @@ const TransactionManagement = () => {
   const filteredTransactions = filterTransactions();
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.backgroundColor }]}
-    >
-      <Text style={[styles.heading, { color: theme.textColor }]}>
-        Gestión de Transacciones
-      </Text>
-      <View style={styles.filterContainer}>
-        <TextInput
-          style={[
-            styles.input,
-            { color: theme.textColor, borderColor: theme.textColor },
-          ]}
-          placeholder="Usuario"
-          placeholderTextColor={theme.textColor}
-          value={filterUser}
-          onChangeText={setFilterUser}
-        />
-        <Picker
-          selectedValue={filterType}
-          style={[
-            styles.input,
-            { color: theme.textColor, borderColor: theme.textColor },
-          ]}
-          onValueChange={(itemValue) => setFilterType(itemValue)}
-        >
-          <Picker.Item label="Todos" value="" />
-          <Picker.Item label="Envío" value="send" />
-          <Picker.Item label="Recepción" value="receive" />
-        </Picker>
-      </View>
-      <View style={styles.dateFiltersContainer}>
-        <View style={styles.datePickerContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => setShowStartDatePicker(true)}
-          >
-            <Text style={styles.buttonText}>
-              {filterStartDate
-                ? filterStartDate.toISOString().split("T")[0]
-                : "Fecha de inicio"}
-            </Text>
-          </TouchableOpacity>
-
-          {showStartDatePicker && (
-            <DateTimePicker
-              value={filterStartDate || new Date()}
-              mode="date"
-              display="default"
-              onChange={(event, selectedDate) => {
-                setShowStartDatePicker(false);
-                setFilterStartDate(selectedDate || filterStartDate);
-              }}
-            />
-          )}
-        </View>
-        <View style={styles.datePickerContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => setShowEndDatePicker(true)}
-          >
-            <Text style={styles.buttonText}>
-              {filterEndDate
-                ? filterEndDate.toISOString().split("T")[0]
-                : "Fecha de fin"}
-            </Text>
-          </TouchableOpacity>
-
-          {showEndDatePicker && (
-            <DateTimePicker
-              value={filterEndDate || new Date()}
-              mode="date"
-              display="default"
-              onChange={(event, selectedDate) => {
-                setShowEndDatePicker(false);
-                setFilterEndDate(selectedDate || filterEndDate);
-              }}
-            />
-          )}
-        </View>
-      </View>
-      <FlatList
-        data={filteredTransactions}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <TouchableOpacity
+    <>
+      <SecondBlur />
+      <View
+        style={[styles.container, { backgroundColor: theme.backgroundColor }]}
+      >
+        <Text style={[styles.heading, { color: theme.textColor }]}>
+          Gestión de Transacciones
+        </Text>
+        <Text style={[styles.subtitle, { color: theme.textColor }]}>
+          Filtrar
+        </Text>
+        <View style={styles.filterContainer}>
+          <TextInput
             style={[
-              styles.transactionCard,
-              { backgroundColor: theme.cardBackground },
+              styles.input,
+              {
+                color: theme.textColor,
+                borderColor: theme.textColor,
+                backgroundColor: theme.cardColor,
+              },
             ]}
-            onPress={() => handleShowDetails(item)}
-          >
-            <Text style={[styles.transactionText, { color: theme.textColor }]}>
-              Remitente: {item.sender}
-            </Text>
-            <Text style={[styles.transactionText, { color: theme.textColor }]}>
-              Destinatario: {item.recipient}
-            </Text>
-            <Text style={[styles.transactionText, { color: theme.textColor }]}>
-              Crypto: {item.crypto}
-            </Text>
-            <Text style={[styles.transactionText, { color: theme.textColor }]}>
-              Cantidad: ${item.amount.toFixed(2)}
-            </Text>
-            <Text style={[styles.transactionText, { color: theme.textColor }]}>
-              Fecha: {item.date}
-            </Text>
-            <Text style={[styles.transactionText, { color: theme.textColor }]}>
-              Tipo: {item.type === "send" ? "Envío" : "Recepción"}
-            </Text>
-          </TouchableOpacity>
-        )}
-      />
-      {selectedTransaction && (
-        <Modal
-          visible={showDetailsModal}
-          animationType="slide"
-          onRequestClose={() => setShowDetailsModal(false)}
-        >
-          <View
+            placeholder="Usuario"
+            placeholderTextColor={theme.textColor}
+            value={filterUser}
+            onChangeText={setFilterUser}
+          />
+          <Picker
+            selectedValue={filterType}
             style={[
-              styles.modalContainer,
-              { backgroundColor: theme.backgroundColor },
+              styles.input,
+              {
+                color: theme.textColor,
+                borderColor: theme.textColor,
+                backgroundColor: theme.cardColor,
+              },
             ]}
+            onValueChange={(itemValue) => setFilterType(itemValue)}
           >
-            <Text style={[styles.modalTitle, { color: theme.textColor }]}>
-              Detalles de la Transacción
-            </Text>
-            <Text style={[styles.modalText, { color: theme.textColor }]}>
-              Remitente: {selectedTransaction.sender}
-            </Text>
-            <Text style={[styles.modalText, { color: theme.textColor }]}>
-              Destinatario: {selectedTransaction.recipient}
-            </Text>
-            <Text style={[styles.modalText, { color: theme.textColor }]}>
-              Cantidad: ${selectedTransaction.amount.toFixed(2)}
-            </Text>
-            <Text style={[styles.modalText, { color: theme.textColor }]}>
-              Fecha: {selectedTransaction.date}
-            </Text>
-            <Text style={[styles.modalText, { color: theme.textColor }]}>
-              Tipo:{" "}
-              {selectedTransaction.type === "send" ? "Envío" : "Recepción"}
-            </Text>
+            <Picker.Item label="Todos" value="" />
+            <Picker.Item label="Envío" value="send" />
+            <Picker.Item label="Recepción" value="receive" />
+          </Picker>
+        </View>
+        <View style={styles.dateFiltersContainer}>
+          <View style={styles.datePickerContainer}>
             <TouchableOpacity
-              style={[styles.button, styles.closeButton]}
-              onPress={() => setShowDetailsModal(false)}
+              style={[styles.button, { backgroundColor: theme.cardColor }]}
+              onPress={() => setShowStartDatePicker(true)}
             >
-              <Text style={styles.buttonText}>Cerrar</Text>
+              <Text style={styles.buttonText}>
+                {filterStartDate
+                  ? filterStartDate.toISOString().split("T")[0]
+                  : "Fecha de inicio"}
+              </Text>
             </TouchableOpacity>
+
+            {showStartDatePicker && (
+              <DateTimePicker
+                value={filterStartDate || new Date()}
+                mode="date"
+                display="default"
+                onChange={(event, selectedDate) => {
+                  setShowStartDatePicker(false);
+                  setFilterStartDate(selectedDate || filterStartDate);
+                }}
+              />
+            )}
           </View>
-        </Modal>
-      )}
-    </View>
+          <View style={styles.datePickerContainer}>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: theme.cardColor }]}
+              onPress={() => setShowEndDatePicker(true)}
+            >
+              <Text style={styles.buttonText}>
+                {filterEndDate
+                  ? filterEndDate.toISOString().split("T")[0]
+                  : "Fecha de fin"}
+              </Text>
+            </TouchableOpacity>
+
+            {showEndDatePicker && (
+              <DateTimePicker
+                value={filterEndDate || new Date()}
+                mode="date"
+                display="default"
+                onChange={(event, selectedDate) => {
+                  setShowEndDatePicker(false);
+                  setFilterEndDate(selectedDate || filterEndDate);
+                }}
+              />
+            )}
+          </View>
+        </View>
+        <Text style={[styles.subtitle, { color: theme.textColor }]}>
+          {filteredTransactions.length} transacciones encontradas
+        </Text>
+        <FlatList
+          data={filteredTransactions}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={[
+                styles.transactionCard,
+                { backgroundColor: theme.cardColor },
+              ]}
+              onPress={() => handleShowDetails(item)}
+            >
+              <Text
+                style={[styles.transactionText, { color: theme.textColor }]}
+              >
+                Remitente: {item.sender}
+              </Text>
+              <Text
+                style={[styles.transactionText, { color: theme.textColor }]}
+              >
+                Destinatario: {item.recipient}
+              </Text>
+              <Text
+                style={[styles.transactionText, { color: theme.textColor }]}
+              >
+                Crypto: {item.crypto}
+              </Text>
+              <Text
+                style={[styles.transactionText, { color: theme.textColor }]}
+              >
+                Cantidad: ${item.amount.toFixed(2)}
+              </Text>
+              <Text
+                style={[styles.transactionText, { color: theme.textColor }]}
+              >
+                Fecha: {item.date}
+              </Text>
+              <Text
+                style={[styles.transactionText, { color: theme.textColor }]}
+              >
+                Tipo: {item.type === "send" ? "Envío" : "Recepción"}
+              </Text>
+            </TouchableOpacity>
+          )}
+        />
+        {selectedTransaction && (
+          <Modal
+            visible={showDetailsModal}
+            animationType="slide"
+            onRequestClose={() => setShowDetailsModal(false)}
+          >
+            <View
+              style={[
+                styles.modalContainer,
+                { backgroundColor: theme.backgroundColor },
+              ]}
+            >
+              <Text style={[styles.modalTitle, { color: theme.textColor }]}>
+                Detalles de la Transacción
+              </Text>
+              <Text style={[styles.modalText, { color: theme.textColor }]}>
+                Remitente: {selectedTransaction.sender}
+              </Text>
+              <Text style={[styles.modalText, { color: theme.textColor }]}>
+                Destinatario: {selectedTransaction.recipient}
+              </Text>
+              <Text style={[styles.modalText, { color: theme.textColor }]}>
+                Cantidad: ${selectedTransaction.amount.toFixed(2)}
+              </Text>
+              <Text style={[styles.modalText, { color: theme.textColor }]}>
+                Fecha: {selectedTransaction.date}
+              </Text>
+              <Text style={[styles.modalText, { color: theme.textColor }]}>
+                Tipo:{" "}
+                {selectedTransaction.type === "send" ? "Envío" : "Recepción"}
+              </Text>
+              <TouchableOpacity
+                style={[styles.button, styles.closeButton]}
+                onPress={() => setShowDetailsModal(false)}
+              >
+                <Text style={styles.buttonText}>Cerrar</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+        )}
+      </View>
+    </>
   );
 };
 
@@ -248,6 +278,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    marginTop: 20,
+  },
+  subtitle: {
+    fontSize: 20,
+    marginBottom: 20,
+    marginTop: 10,
   },
   filterContainer: {
     flexDirection: "row",
@@ -257,9 +293,9 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#ccc",
-    borderRadius: 5,
+    borderRadius: 20,
     paddingHorizontal: 10,
     marginBottom: 10,
     flex: 1,
@@ -276,8 +312,8 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
-    backgroundColor: "#d9d9d9",
+    borderRadius: 20,
+    backgroundColor: "#e9e9e9",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -289,11 +325,11 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#ccc",
   },
   transactionText: {
-    fontSize: 16,
+    fontSize: 14,
     marginBottom: 5,
   },
   modalContainer: {

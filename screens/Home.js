@@ -2,49 +2,58 @@ import React, { useContext } from "react";
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 import { ThemeContext } from "../context/ThemeContext";
 import { CryptoContext } from "../context/CryptoContext";
+import SecondBlur from "../components/SecondBlur";
 
 const Home = () => {
   const { theme } = useContext(ThemeContext);
   const cryptoData = useContext(CryptoContext);
 
   return (
-    <ScrollView
-      contentContainerStyle={[
-        styles.container,
-        { backgroundColor: theme.backgroundColor },
-      ]}
-    >
-      <Text style={[styles.heading, { color: theme.title }]}>Home Screen</Text>
+    <>
+      <SecondBlur />
+      <ScrollView
+        contentContainerStyle={[
+          styles.container,
+          { backgroundColor: theme.backgroundColor },
+        ]}
+      >
+        <Text style={[styles.heading, { color: theme.title }]}>
+          Crypto Wallet
+        </Text>
 
-      {cryptoData &&
-        cryptoData.map((crypto) => (
-          <View
-            key={crypto.id}
-            style={[styles.cryptoCard, { backgroundColor: theme.cardColor }]}
-          >
-            <View style={styles.cryptoHeader}>
-              <Text style={[styles.cryptoName, { color: theme.text }]}>
-                {crypto.name}
-              </Text>
-              <Image source={{ uri: crypto.icon }} style={styles.cryptoIcon} />
+        {cryptoData &&
+          cryptoData.map((crypto) => (
+            <View
+              key={crypto.id}
+              style={[styles.cryptoCard, { backgroundColor: theme.cardColor }]}
+            >
+              <View style={styles.cryptoHeader}>
+                <Text style={[styles.cryptoName, { color: theme.textColor }]}>
+                  {crypto.name}
+                </Text>
+                <Image
+                  source={{ uri: crypto.icon }}
+                  style={styles.cryptoIcon}
+                />
+              </View>
+              <View style={styles.cryptoInfo}>
+                <Text style={[styles.text, { color: theme.textColor }]}>
+                  Price: ${crypto.price.toLocaleString()}
+                </Text>
+                <Text style={[styles.text, { color: theme.textColor }]}>
+                  Change (24h): {crypto.change24h.toLocaleString()}%
+                </Text>
+                <Text style={[styles.text, { color: theme.textColor }]}>
+                  Market Cap: ${crypto.marketCap.toLocaleString()}
+                </Text>
+                <Text style={[styles.text, { color: theme.textColor }]}>
+                  Volume (24h): ${crypto.volume.toLocaleString()}
+                </Text>
+              </View>
             </View>
-            <View style={styles.cryptoInfo}>
-              <Text style={[styles.text, { color: theme.text }]}>
-                Price: ${crypto.price.toLocaleString()}
-              </Text>
-              <Text style={[styles.text, { color: theme.text }]}>
-                Change (24h): {crypto.change24h.toLocaleString()}%
-              </Text>
-              <Text style={[styles.text, { color: theme.text }]}>
-                Market Cap: ${crypto.marketCap.toLocaleString()}
-              </Text>
-              <Text style={[styles.text, { color: theme.text }]}>
-                Volume (24h): ${crypto.volume.toLocaleString()}
-              </Text>
-            </View>
-          </View>
-        ))}
-    </ScrollView>
+          ))}
+      </ScrollView>
+    </>
   );
 };
 
@@ -57,9 +66,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    marginTop: 20,
   },
   text: {
-    fontSize: 16,
+    fontSize: 14,
     marginBottom: 5,
   },
   cryptoCard: {
@@ -68,7 +78,7 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 20,
     width: "100%",
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#ccc",
   },
   cryptoHeader: {
@@ -78,7 +88,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   cryptoName: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "bold",
   },
   cryptoIcon: {
@@ -88,6 +98,7 @@ const styles = StyleSheet.create({
   },
   cryptoInfo: {
     marginLeft: 10,
+    fontSize: 10,
   },
 });
 

@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { CryptoContext } from "../../context/CryptoContext";
 import { ThemeContext } from "../../context/ThemeContext";
+import SecondBlur from "../../components/SecondBlur";
 
 const SystemConfiguration = () => {
   const { theme } = useContext(ThemeContext);
@@ -40,39 +41,45 @@ const SystemConfiguration = () => {
   };
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: theme.backgroundColor }]}
-    >
-      <Text style={[styles.heading, { color: theme.textColor }]}>
-        Crypto Management
-      </Text>
-      <TextInput
-        style={[
-          styles.input,
-          { color: theme.textColor, borderColor: theme.textColor },
-        ]}
-        placeholder="Nombre de la Criptomoneda"
-        placeholderTextColor={theme.textColor}
-        value={newCryptoName}
-        onChangeText={setNewCryptoName}
-      />
+    <>
+      <SecondBlur />
+      <View
+        style={[styles.container, { backgroundColor: theme.backgroundColor }]}
+      >
+        <Text style={[styles.heading, { color: theme.textColor }]}>
+          Crypto Management
+        </Text>
+        <TextInput
+          style={[
+            styles.input,
+            {
+              color: theme.textColor,
+              borderColor: theme.textColor,
+              backgroundColor: theme.cardColor,
+            },
+          ]}
+          placeholder="Nombre de la Criptomoneda"
+          placeholderTextColor={theme.textColor}
+          value={newCryptoName}
+          onChangeText={setNewCryptoName}
+        />
 
-      <TouchableOpacity style={styles.button} onPress={handleAddCrypto}>
-        <Text style={styles.buttonText}>Agregar Criptomoneda</Text>
-      </TouchableOpacity>
-      <Text style={[styles.heading2, { color: theme.textColor }]}>
-        Cryptos Actuales
-      </Text>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: theme.buttonConfirmColor }]}
+          onPress={handleAddCrypto}
+        >
+          <Text style={styles.buttonText}>Agregar Criptomoneda</Text>
+        </TouchableOpacity>
+        <Text style={[styles.heading2, { color: theme.textColor }]}>
+          Cryptos Actuales
+        </Text>
 
         <FlatList
           data={cryptoData}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <View
-              style={[
-                styles.cryptoCard,
-                { backgroundColor: theme.cardBackground },
-              ]}
+              style={[styles.cryptoCard, { backgroundColor: theme.cardColor }]}
             >
               <Image source={{ uri: item.icon }} style={styles.cryptoIcon} />
               <View>
@@ -88,7 +95,10 @@ const SystemConfiguration = () => {
               </View>
               <TouchableOpacity
                 onPress={() => handleRemoveCrypto(item.id)}
-                style={styles.buttonDelete}
+                style={[
+                  styles.buttonDelete,
+                  { backgroundColor: theme.cardColor },
+                ]}
               >
                 <Text style={[styles.removeText, { color: "red" }]}>
                   Eliminar
@@ -97,8 +107,8 @@ const SystemConfiguration = () => {
             </View>
           )}
         />
-
-    </View>
+      </View>
+    </>
   );
 };
 
@@ -114,6 +124,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    marginTop: 20,
   },
   heading2: {
     fontSize: 24,
@@ -122,9 +133,9 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#ccc",
-    borderRadius: 5,
+    borderRadius: 20,
     paddingHorizontal: 10,
     marginBottom: 10,
   },
@@ -132,10 +143,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    borderRadius: 15,
+    borderRadius: 20,
     marginBottom: 20,
     marginTop: 10,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: "#ccc",
   },
   cryptoIcon: {
@@ -148,19 +159,19 @@ const styles = StyleSheet.create({
   },
   removeText: {
     marginLeft: "auto",
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: "bold",
   },
   button: {
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 5,
+    borderRadius: 20,
     backgroundColor: "#d9d9d9",
     alignItems: "center",
     justifyContent: "center",
   },
   buttonText: {
-    color: "#000",
+    color: "white",
     fontWeight: "bold",
   },
   buttonDelete: {
@@ -170,7 +181,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f1f1f1",
     alignItems: "center",
     justifyContent: "center",
-    marginLeft: 20,
+    marginLeft: 30,
   },
 });
 
