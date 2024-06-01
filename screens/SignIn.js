@@ -13,9 +13,9 @@ import {
 import { useAuth } from "../context/AuthContext";
 import * as LocalAuthentication from "expo-local-authentication";
 
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
-import { loginAPI } from '../api/formAPI'
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { loginAPI } from "../api/formAPI";
 
 const SignIn = ({ navigation }) => {
   const { height } = Dimensions.get("window");
@@ -52,11 +52,11 @@ const SignIn = ({ navigation }) => {
     initialValues: initialValues(),
     validationSchema: Yup.object(validationSchema()),
     onSubmit: async (formData) => {
-        console.log(formData);
-        try {
-            const result = await loginAPI(formData);
+      console.log(formData);
+      try {
+        const result = await loginAPI(formData);
 
-            if(result.statusCode) throw 'El usuario/pass no existe';
+        if (result.statusCode) throw "El usuario/pass no existe";
 
             console.log('Usuario login');
             handleSignIn(result.user.userType);
@@ -69,16 +69,18 @@ const SignIn = ({ navigation }) => {
 
   function initialValues() {
     return {
-        identifier: '',
-        password: '',
-    }
+      identifier: "",
+      password: "",
+    };
   }
 
   function validationSchema() {
     return {
-        identifier: Yup.string().email().required(true),
-        password: Yup.string().required(true),    
-    }
+      identifier: Yup.string()
+        .email("El correo electrónico no es válido")
+        .required("El correo electrónico es obligatorio"),
+      password: Yup.string().required("La contraseña no es válida"),
+    };
   }
 
   return (
@@ -91,21 +93,27 @@ const SignIn = ({ navigation }) => {
             <TextInput
               style={[
                 styles.input,
-                formik.errors.identifier && styles.errorInput,]}
+                formik.errors.identifier && styles.errorInput,
+              ]}
               placeholder="Enter email"
               autoCorrect={false}
               //value={username}
               //onChangeText={setUsername}
 
               // formik
-              onChangeText={(text) => formik.setFieldValue('identifier', text)}
+              onChangeText={(text) => formik.setFieldValue("identifier", text)}
               value={formik.values.identifier}
               error={formik.errors.identifier}
             />
+            {formik.errors.identifier && formik.touched.identifier && (
+              <Text style={styles.errorText}>{formik.errors.identifier}</Text>
+            )}
+
             <TextInput
               style={[
                 styles.input,
-                formik.errors.password && styles.errorInput]}
+                formik.errors.password && styles.errorInput,
+              ]}
               placeholder="Password"
               autoCorrect={false}
               secureTextEntry={true}
@@ -113,12 +121,16 @@ const SignIn = ({ navigation }) => {
               //onChangeText={setPassword}
 
               // formik
-              onChangeText={(text) => formik.setFieldValue('password', text)}
+              onChangeText={(text) => formik.setFieldValue("password", text)}
               value={formik.values.password}
               error={formik.errors.password}
             />
 
-            <TouchableOpacity>
+            {formik.errors.password && formik.touched.password && (
+              <Text style={styles.errorText}>{formik.errors.password}</Text>
+            )}
+
+            {/* <TouchableOpacity>
               <Text
                 style={[
                   styles.buttonsText,
@@ -127,7 +139,7 @@ const SignIn = ({ navigation }) => {
               >
                 Recovery Password
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <TouchableOpacity
               style={styles.signInButton}
@@ -272,8 +284,11 @@ const styles = StyleSheet.create({
     shadowRadius: 10.32,
   },
   errorInput: {
-    borderColor: 'red',
+    borderColor: "red",
     borderWidth: 3,
-    // any other styles you want to apply when there's an error
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 10,
   },
 });

@@ -12,9 +12,9 @@ import {
 } from "react-native";
 import { useAuth } from "../context/AuthContext";
 
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
-import { registerAPI } from '../api/formAPI'
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { registerAPI } from "../api/formAPI";
 
 const SignIn = ({ navigation }) => {
   const { height } = Dimensions.get("window");
@@ -25,25 +25,24 @@ const SignIn = ({ navigation }) => {
     signIn();
   };
 
-
   // all about formik to check for data
   const formik = useFormik({
     initialValues: initialValues(),
     validationSchema: Yup.object(validationSchema()),
     onSubmit: async (formData) => {
-        console.log(formData);
-        try {
-            const result = await registerAPI(formData);
-            
-            if(result.statusCode) throw 'Error al crear usuario';
+      console.log(formData);
+      try {
+        const result = await registerAPI(formData);
 
-            console.log('Usuario creado');
-            handleSignIn();
-            //changeForm();
-        } catch (error) {
-            console.log(error);
-        }
-    }
+        if (result.statusCode) throw "Error al crear usuario";
+
+        console.log("Usuario creado");
+        handleSignIn();
+        //changeForm();
+      } catch (error) {
+        console.log(error);
+      }
+    },
   });
 
   function initialValues() {
@@ -58,10 +57,16 @@ const SignIn = ({ navigation }) => {
 
   function validationSchema() {
     return {
-        email: Yup.string().email().required(true),
-        password: Yup.string().required(true),
-        repeatPassword: Yup.string().required(true).oneOf([Yup.ref('password')])
-    }
+      email: Yup.string()
+        .email("El correo electrónico no es válido")
+        .required("El correo electrónico es obligatorio"),
+      password: Yup.string()
+        .min(6, "La contraseña debe tener al menos 6 caracteres")
+        .required("La contraseña es obligatoria"),
+      repeatPassword: Yup.string()
+        .required("Las contraseñas deben coincidir")
+        .oneOf([Yup.ref("password")], "Las contraseñas deben coincidir"),
+    };
   }
 
   return (
@@ -73,45 +78,61 @@ const SignIn = ({ navigation }) => {
             {/* <Text style={styles.body}>Register</Text> */}
 
             <TextInput
-              style={[
-                styles.input,
-                formik.errors.email && styles.errorInput]}
+              style={[styles.input, formik.errors.email && styles.errorInput]}
               placeholder="Enter email"
               autoCorrect={false}
               // formik
-              onChangeText={(text) => {formik.setFieldValue('email', text);
-                                      formik.setFieldValue('username', text)}}
+              onChangeText={(text) => {
+                formik.setFieldValue("email", text);
+                formik.setFieldValue("username", text);
+              }}
               value={formik.values.email}
               error={formik.errors.email}
             />
+            {formik.errors.email && formik.touched.email && (
+              <Text style={styles.errorText}>{formik.errors.email}</Text>
+            )}
             <TextInput
               style={[
                 styles.input,
-                formik.errors.password && styles.errorInput]}
+                formik.errors.password && styles.errorInput,
+              ]}
               placeholder="Password"
               autoCorrect={false}
               secureTextEntry={true}
-
               // formik
-              onChangeText={(text) => formik.setFieldValue('password', text)}
+              onChangeText={(text) => formik.setFieldValue("password", text)}
               value={formik.values.password}
               error={formik.errors.password}
             />
+            {formik.errors.password && formik.touched.password && (
+              <Text style={styles.errorText}>{formik.errors.password}</Text>
+            )}
             <TextInput
               style={[
                 styles.input,
-                formik.errors.repeatPassword && styles.errorInput]}
+                formik.errors.repeatPassword && styles.errorInput,
+              ]}
               placeholder="Repeat password"
               autoCorrect={false}
               secureTextEntry={true}
-
               // formik
-              onChangeText={(text) => formik.setFieldValue('repeatPassword', text)}
-            value={formik.values.repeatPassword}
-            error={formik.errors.repeatPassword}
+              onChangeText={(text) =>
+                formik.setFieldValue("repeatPassword", text)
+              }
+              value={formik.values.repeatPassword}
+              error={formik.errors.repeatPassword}
             />
+            {formik.errors.repeatPassword && formik.touched.repeatPassword && (
+              <Text style={styles.errorText}>
+                {formik.errors.repeatPassword}
+              </Text>
+            )}
 
-            <TouchableOpacity style={styles.signInButton} /*onPress={handleSignIn}*/ onPress={formik.handleSubmit}>
+            <TouchableOpacity
+              style={styles.signInButton}
+              /*onPress={handleSignIn}*/ onPress={formik.handleSubmit}
+            >
               <Text style={{ color: "white", fontWeight: "bold" }}>
                 Register
               </Text>
@@ -227,7 +248,11 @@ const styles = StyleSheet.create({
     shadowRadius: 10.32,
   },
   errorInput: {
-    borderColor: 'red',
+    borderColor: "red",
     borderWidth: 3,
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 10,
   },
 });
