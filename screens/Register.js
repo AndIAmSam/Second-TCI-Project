@@ -22,7 +22,7 @@ const SignIn = ({ navigation }) => {
   const { signIn } = useAuth();
 
   const handleSignIn = () => {
-    signIn();
+    signIn('user');
   };
 
   // all about formik to check for data
