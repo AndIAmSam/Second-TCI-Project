@@ -4,8 +4,10 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userType, setUserType] = useState('');
 
-  const signIn = () => {
+  const signIn = async (user) => {
+    setUserType(user);
     setIsAuthenticated(true);
   };
 
@@ -18,7 +20,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, signIn, signOut, register }}>
+    <AuthContext.Provider value={{ isAuthenticated, signIn, signOut, userType }}>
       {children}
     </AuthContext.Provider>
   );
