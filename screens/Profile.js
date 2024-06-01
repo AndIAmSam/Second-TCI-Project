@@ -16,6 +16,8 @@ import { Picker } from "@react-native-picker/picker";
 import * as yup from "yup";
 import * as ImagePicker from "expo-image-picker/src/ImagePicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Feather } from "@expo/vector-icons";
+import ThemeSwitch from "../components/ThemeSwitch";
 
 const Profile = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
@@ -133,16 +135,7 @@ const Profile = () => {
         style={[styles.container, { backgroundColor: theme.backgroundColor }]}
       >
         <View style={styles.switchContainer}>
-          <Text style={[styles.text, { color: theme.textColor }]}>
-            Modo Oscuro
-          </Text>
-          <Switch
-            value={theme === "dark"}
-            onValueChange={toggleTheme}
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={theme === "dark" ? "#f4f3f4" : "#f4f3f4"}
-            ios_backgroundColor="#3e3e3e"
-          />
+          <ThemeSwitch theme={theme} toggleTheme={toggleTheme} />
         </View>
         <TouchableOpacity onPress={handleChoosePhoto}>
           <View style={styles.profilePicContainer}>
@@ -155,7 +148,9 @@ const Profile = () => {
             )}
           </View>
         </TouchableOpacity>
-        <View style={styles.infoContainer}>
+        <View
+          style={[styles.infoContainer, { backgroundColor: theme.cardColor }]}
+        >
           <View style={styles.row}>
             <Text style={[styles.label, { color: theme.textColor }]}>
               Usuario:
@@ -166,7 +161,7 @@ const Profile = () => {
           </View>
           <View style={styles.row}>
             <Text style={[styles.label, { color: theme.textColor }]}>
-              Nombre y Apellidos:
+              Nombre:
             </Text>
             <Text style={[styles.text, { color: theme.textColor }]}>
               {userData.fullName}
@@ -174,7 +169,7 @@ const Profile = () => {
           </View>
           <View style={styles.row}>
             <Text style={[styles.label, { color: theme.textColor }]}>
-              Correo Electrónico:
+              Correo:
             </Text>
             <Text style={[styles.text, { color: theme.textColor }]}>
               {userData.email}
@@ -189,7 +184,9 @@ const Profile = () => {
             </Text>
           </View>
         </View>
-        <Text style={styles.subtitle}>Tarjeta Asociada a tu Cuenta</Text>
+        <Text style={[styles.subtitle, { color: theme.textColor }]}>
+          Tarjeta asociada a tu Cuenta
+        </Text>
         <View style={[styles.cardContainer, { backgroundColor: cardColor }]}>
           <Image source={cardLogo} style={styles.cardLogo} />
           <Text style={styles.cardNumber}>{creditCardInfo.number}</Text>
@@ -200,7 +197,9 @@ const Profile = () => {
           </View>
         </View>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
-          <Text>Editar Tarjeta</Text>
+          <Text style={[styles.editCard, { color: "#a0a0a0" }]}>
+            Editar Tarjeta
+          </Text>
         </TouchableOpacity>
         <Modal
           animationType="slide"
@@ -313,6 +312,8 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     width: "100%",
+    padding: 20,
+    borderRadius: 10,
   },
   row: {
     flexDirection: "row",
@@ -328,9 +329,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   switchContainer: {
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
     marginBottom: 100,
+    position: "absolute",
+    top: 40,
+    right: 20,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 30,
+    paddingHorizontal: 10,
   },
   cardContainer: {
     width: "100%",
