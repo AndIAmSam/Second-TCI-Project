@@ -51,7 +51,7 @@ const SignIn = ({ navigation }) => {
         username: '',
         password: '',
         repeatPassword: '',
-        userType: 'admin'
+        userType: 'user'
     }
   }
 
