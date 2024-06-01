@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -14,9 +14,42 @@ import { ThemeContext } from "../context/ThemeContext";
 import SecondBlur from "../components/SecondBlur";
 import { Picker } from "@react-native-picker/picker";
 import * as yup from "yup";
+import * as ImagePicker from "expo-image-picker/src/ImagePicker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Profile = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
+  const [profilePic, setProfilePic] = useState(null);
+
+  useEffect(() => {
+    const loadProfilePic = async () => {
+      const savedProfilePic = await AsyncStorage.getItem("profilePic");
+      if (savedProfilePic) {
+        setProfilePic(savedProfilePic);
+      }
+    };
+    loadProfilePic();
+  }, []);
+
+  const handleChoosePhoto = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+      });
+
+      console.log(result);
+
+      if (!result.canceled) {
+        const image = result.assets[0].uri;
+        setProfilePic(image);
+        await AsyncStorage.setItem("profilePic", image);
+      }
+    } catch (error) {
+      console.error("Error selecting photo", error);
+    }
+  };
 
   const userData = {
     username: "AndIAmSam",
@@ -111,7 +144,17 @@ const Profile = () => {
             ios_backgroundColor="#3e3e3e"
           />
         </View>
-        <Image source={userData.profilePic} style={styles.profilePic} />
+        <TouchableOpacity onPress={handleChoosePhoto}>
+          <View style={styles.profilePicContainer}>
+            {profilePic ? (
+              <Image source={{ uri: profilePic }} style={styles.profilePic} />
+            ) : (
+              <Text style={styles.profilePicPlaceholder}>
+                Selecciona una foto de perfil
+              </Text>
+            )}
+          </View>
+        </TouchableOpacity>
         <View style={styles.infoContainer}>
           <View style={styles.row}>
             <Text style={[styles.label, { color: theme.textColor }]}>
@@ -350,6 +393,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
     marginRight: 10,
+  },
+  profilePicContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 40,
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+    backgroundColor: "#E0E0E0",
+  },
+  profilePic: {
+    width: 150,
+    height: 150,
+    borderRadius: 100,
+  },
+  profilePicPlaceholder: {
+    textAlign: "center",
+    color: "#7F7F7F",
   },
 });
 
