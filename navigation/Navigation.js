@@ -36,12 +36,64 @@ const AuthStack = () => {
 };
 
 const MainStack = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, userType } = useAuth();
 
   const { theme } = useContext(ThemeContext);
 
   if (!isAuthenticated) {
     return <AuthStack />;
+  }
+
+  if(userType === 'admin') {
+    return(
+      <Tab.Navigator
+      barStyle={{ backgroundColor: theme.bottomBarBackgroundColor }}
+      activeColor={theme.iconColor}
+      inactiveColor={theme.iconInactiveColor}
+      shifting={true}
+      theme={{ colors: { secondaryContainer: theme.iconBackgroundColor } }}
+    >
+
+<Tab.Screen
+        name="A-Dashboard"
+        component={AdminDashboard}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="dashboard" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="A-UserManagement"
+        component={UserManagement}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Octicons name="feed-person" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="A-TransactionManagement"
+        component={TransactionManagement}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="compare-arrows" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="CryptoConfig"
+        component={SystemConfiguration}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 name="money-check" size={24} color={color} />
+          ),
+        }}
+      />
+
+    </Tab.Navigator>
+
+    )
   }
 
   return (
@@ -106,6 +158,8 @@ const MainStack = () => {
           ),
         }}
       />
+
+
       <Tab.Screen
         name="A-Dashboard"
         component={AdminDashboard}
