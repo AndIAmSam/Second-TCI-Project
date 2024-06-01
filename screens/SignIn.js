@@ -25,8 +25,8 @@ const SignIn = ({ navigation }) => {
 
   const { signIn } = useAuth();
 
-  const handleSignIn = () => {
-    signIn();
+  const handleSignIn = (userType) => {
+    signIn(userType);
   };
 
   const handleFingerprintLogin = async () => {
@@ -59,7 +59,7 @@ const SignIn = ({ navigation }) => {
             if(result.statusCode) throw 'El usuario/pass no existe';
 
             console.log('Usuario login');
-            handleSignIn();
+            handleSignIn(result.user.userType);
             //changeForm();
         } catch (error) {
             console.log(error);
