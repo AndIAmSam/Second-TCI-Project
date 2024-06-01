@@ -25,6 +25,8 @@ const SignIn = ({ navigation }) => {
 
   const { signIn } = useAuth();
 
+  const [errorMessage, setErrorMessage] = useState("");
+
   const handleSignIn = (userType) => {
     signIn(userType);
   };
@@ -56,15 +58,18 @@ const SignIn = ({ navigation }) => {
       try {
         const result = await loginAPI(formData);
 
-        if (result.statusCode) throw "El usuario/pass no existe";
-
-            console.log('Usuario login');
-            handleSignIn(result.user.userType);
-            //changeForm();
-        } catch (error) {
-            console.log(error);
+        if (result.statusCode) {
+          throw new Error("El usuario no existe");
         }
-    }
+
+        console.log("Usuario login");
+        handleSignIn(result.user.userType);
+        //changeForm();
+      } catch (error) {
+        console.log(error);
+        setErrorMessage(error.message);
+      }
+    },
   });
 
   function initialValues() {
@@ -140,6 +145,10 @@ const SignIn = ({ navigation }) => {
                 Recovery Password
               </Text>
             </TouchableOpacity> */}
+
+            {errorMessage !== "" && (
+              <Text style={styles.errorText}>{errorMessage}</Text>
+            )}
 
             <TouchableOpacity
               style={styles.signInButton}
