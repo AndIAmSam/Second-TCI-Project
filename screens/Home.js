@@ -24,10 +24,10 @@ const Home = () => {
 
   const fetchNews = async () => {
     try {
-      console.log("Antes de la llamada a la API");
+      // console.log("Antes de la llamada a la API");
       const response = await fetch("https://api.coingecko.com/api/v3/news");
       const data = await response.json();
-      console.log("Datos de la API:", data);
+      // console.log("Datos de la API:", data);
       setNews(data);
     } catch (error) {
       console.error("Error fetching news:", error);

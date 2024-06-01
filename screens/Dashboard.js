@@ -87,6 +87,12 @@ const Dashboard = () => {
   //console.log(getCryptoData(email));
   cryptoData = getCryptoData(email);
 
+  const [forceRender, setForceRender] = useState(false);
+
+  const handleForceRender = () => {
+    setForceRender(prevState => !prevState);
+  };
+
   useEffect(() => {
     const fetchCryptoData = async () => {
       const data = await getCryptoData(email);
@@ -105,10 +111,11 @@ const Dashboard = () => {
           return { ...crypto, balance };
         });
         setCryptoBalances(balances);
+        handleForceRender();
       }
     };
     fetchCryptoData();
-  }, [email]);
+  }, [email, forceRender]);
 
   useEffect(() => {
     console.log(cryptoBalances);

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -15,6 +15,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { CryptoContext } from "../context/CryptoContext";
 import SecondBlur from "../components/SecondBlur";
 
+import { useAuth } from "../context/AuthContext";
+import { API_URL } from "../api/constants";
+
 const Operations = () => {
   const cryptoData = useContext(CryptoContext);
 
@@ -25,26 +28,128 @@ const Operations = () => {
   const [amount, setAmount] = useState("$");
   const [paymentMethod, setPaymentMethod] = useState("");
 
+  const [wallet, setWallet] = useState(null);
+  const [cryptos, setCryptos] = useState(null);
+  const [userId, setId] = useState(null);
+
+  const { email } = useAuth();
+
+  useEffect(() => {
+    const fetchWallet = async () => {
+      const [walletData, userId] = await getCryptoData(email);
+      setWallet(walletData);
+      setCryptos(cryptos);
+      setId(userId);
+    };
+
+    fetchWallet();
+  }, [email]);
+
+  async function getCryptoData(email) {
+    try {
+      const url = `${API_URL}/balances?email=${email}`;
+      const params = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const response = await fetch(url, params);
+      const result = await response.json();
+      return [result[0].cryptos, result[0]._id];
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+  // wallet = getCryptoData(email);
+
   const handleAction = (crypto, actionType) => {
     setSelectedCrypto(crypto);
     setAction(actionType);
     setShowModal(true);
   };
 
-  const handleConfirm = () => {
+  async function updateCryptoData(id, newCryptosData) {
+    console.log(id);
+    try {
+      const url = `${API_URL}/balances/${id}`;
+      const params = {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cryptos: newCryptosData }),
+      };
+      console.log(params);
+      const response = await fetch(url, params);
+      const result = await response.json();
+      console.log("Resultado" + result);
+      return result;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+  const handleConfirm = async () => {
     if (selectedCrypto && action) {
-      const { name } = selectedCrypto;
+      const { id, name } = selectedCrypto;
+      const numericAmount = parseFloat(amount.replace("$", ""));
+      let updatedWallet = [...wallet];
+
+      updatedWallet = updatedWallet.map((crypto) => {
+        console.log(crypto.name);
+        console.log(id);
+        if (crypto.name.toLowerCase() === id.toLowerCase()) {
+          const newBalance =
+            action === "buy"
+              ? crypto.balance + numericAmount
+              : crypto.balance - numericAmount;
+
+          if (newBalance < 0) {
+            Alert.alert(
+              "Error",
+              "No tienes suficientes fondos para esta venta"
+            );
+            return crypto;
+          }
+
+          return { ...crypto, balance: newBalance };
+        }
+        return crypto;
+      });
+
+      setWallet(updatedWallet);
+
+      try {
+        const newCryptosData = updatedWallet.map((crypto) => ({
+          id: crypto.id,
+          balance: crypto.balance,
+          name: crypto.name,
+        }));
+
+        await updateCryptoData(userId, newCryptosData);
+      } catch (error) {
+        console.log(error);
+      }
+
       if (action === "buy") {
         Alert.alert("Operación completada", `Compraste ${amount} ${name}`, [
           { text: "OK", onPress: () => console.log("OK Pressed") },
         ]);
-        console.log(`Comprando ${amount} ${name} usando ${paymentMethod}`);
+        console.log(`Comprando ${amount} ${name} usando`);
       } else if (action === "sell") {
         Alert.alert("Operación completada", `Vendiste ${amount} ${name}`, [
           { text: "OK", onPress: () => console.log("OK Pressed") },
         ]);
-        console.log(`Vendiendo ${amount} ${name} usando ${paymentMethod}`);
+        console.log(`Vendiendo ${amount} ${name} usando`);
       }
+
+      console.log(wallet);
+      console.log(updatedWallet);
+
       setSelectedCrypto(null);
       setAmount("");
       setPaymentMethod("");
