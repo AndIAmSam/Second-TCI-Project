@@ -54,7 +54,7 @@ const MainStack = () => {
       theme={{ colors: { secondaryContainer: theme.iconBackgroundColor } }}
     >
 
-<Tab.Screen
+      <Tab.Screen
         name="A-Dashboard"
         component={AdminDashboard}
         options={{
@@ -95,109 +95,74 @@ const MainStack = () => {
 
     )
   }
+  if(userType === 'user'){
+    return (
+      <Tab.Navigator
+        barStyle={{ backgroundColor: theme.bottomBarBackgroundColor }}
+        activeColor={theme.iconColor}
+        inactiveColor={theme.iconInactiveColor}
+        shifting={true}
+        theme={{ colors: { secondaryContainer: theme.iconBackgroundColor } }}
+      >
+        <Tab.Screen
+          name="Home"
+          component={Home}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <Ionicons name="home" size={24} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Dashboard"
+          component={Dashboard}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <MaterialIcons name="dashboard" size={24} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Transactions"
+          component={Transactions}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <FontAwesome6 name="money-check" size={24} color={color} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Operations"
+          component={Operations}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <MaterialIcons name="compare-arrows" size={24} color={color} />
+            ),
+          }}
+        />
+        {/* <Tab.Screen
+          name="About"
+          component={About}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <Ionicons name="information-circle" size={24} color={color} />
+            ),
+          }}
+        /> */}
+        <Tab.Screen
+          name="Profile"
+          component={Profile}
+          options={{
+            tabBarIcon: ({ color }) => (
+              <Octicons name="feed-person" size={24} color={color} />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    );
+  }
 
-  return (
-    <Tab.Navigator
-      barStyle={{ backgroundColor: theme.bottomBarBackgroundColor }}
-      activeColor={theme.iconColor}
-      inactiveColor={theme.iconInactiveColor}
-      shifting={true}
-      theme={{ colors: { secondaryContainer: theme.iconBackgroundColor } }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="home" size={24} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Dashboard"
-        component={Dashboard}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="dashboard" size={24} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Transactions"
-        component={Transactions}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <FontAwesome6 name="money-check" size={24} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Operations"
-        component={Operations}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="compare-arrows" size={24} color={color} />
-          ),
-        }}
-      />
-      {/* <Tab.Screen
-        name="About"
-        component={About}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="information-circle" size={24} color={color} />
-          ),
-        }}
-      /> */}
-      <Tab.Screen
-        name="Profile"
-        component={Profile}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Octicons name="feed-person" size={24} color={color} />
-          ),
-        }}
-      />
-
-
-      <Tab.Screen
-        name="A-Dashboard"
-        component={AdminDashboard}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="dashboard" size={24} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="A-UserManagement"
-        component={UserManagement}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Octicons name="feed-person" size={24} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="A-TransactionManagement"
-        component={TransactionManagement}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="compare-arrows" size={24} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="CryptoConfig"
-        component={SystemConfiguration}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <FontAwesome6 name="money-check" size={24} color={color} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
+  return null;
 };
 
 const Navigation = () => {
