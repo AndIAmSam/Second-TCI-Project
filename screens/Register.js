@@ -15,15 +15,39 @@ import { useAuth } from "../context/AuthContext";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { registerAPI } from "../api/formAPI";
+import { API_URL } from "../api/constants";
 
 const SignIn = ({ navigation }) => {
   const { height } = Dimensions.get("window");
 
   const { signIn } = useAuth();
 
-  const handleSignIn = () => {
-    signIn('user');
+  const handleSignIn = (email) => {
+    signIn('user', email);
   };
+
+  async function createBalance (email) {
+    console.log('\nbalance')
+    const url = `${API_URL}/balances`;
+    const params = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email,
+        cryptos: [
+          { id: 1, name: "Bitcoin", balance: 7 },
+          { id: 2, name: "Ethereum", balance: 7 },
+          { id: 3, name: "Litecoin", balance: 7 },
+          { id: 4, name: "Ripple", balance: 7 },
+          { id: 5, name: "Cardano", balance: 7 },
+        ]
+      })
+    }
+    const response = await fetch(url, params);
+    const result = await response.json();
+  }
 
   // all about formik to check for data
   const formik = useFormik({
@@ -37,8 +61,8 @@ const SignIn = ({ navigation }) => {
         if (result.statusCode) throw "Error al crear usuario";
 
         console.log("Usuario creado");
-        handleSignIn();
-        //changeForm();
+        createBalance(formData.email);
+        handleSignIn(formData.email);
       } catch (error) {
         console.log(error);
       }

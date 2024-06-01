@@ -4,13 +4,38 @@ import { ThemeContext } from "../context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 import SecondBlur from "../components/SecondBlur";
 
-const cryptoData = [
+import { useAuth } from "../context/AuthContext";
+import { API_URL } from "../api/constants";
+
+
+async function getCryptoData(email) {
+  try{
+    const url = `${API_URL}/balances?email=${email}`;
+    const params = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+    const response = await fetch(url, params);
+    const result = await response.json();
+    return result[0].cryptos;
+  } catch(error) {
+    console.log(error);
+    return null;
+  }
+
+}
+
+
+let cryptoData = [
   { id: 1, name: "Bitcoin", balance: 2.5 },
   { id: 2, name: "Ethereum", balance: 2.3 },
   { id: 3, name: "Litecoin", balance: 5.8 },
   { id: 4, name: "Ripple", balance: 500 },
   { id: 5, name: "Cardano", balance: 120 },
 ];
+
 
 const transactionData = [
   {
@@ -60,21 +85,30 @@ const Dashboard = () => {
   const [transactions, setTransactions] = useState([]);
   const { theme, toggleTheme } = useContext(ThemeContext);
 
+  const { email } = useAuth();
+
+  //console.log(getCryptoData(email));
+  cryptoData = getCryptoData(email);
+
   useEffect(() => {
-    const balances = cryptoData.map((crypto) => {
-      const transactions = transactionData.filter(
-        (trans) => trans.crypto === crypto.name
-      );
-      const balance =
-        crypto.balance -
-        transactions.reduce((acc, curr) => {
-          return curr.type === "Compra" ? acc + curr.amount : acc - curr.amount;
-        }, 0);
-      return { ...crypto, balance };
-    });
-    setCryptoBalances(balances);
+    if (cryptoData.length > 0) {
+      const balances = cryptoData.map((crypto) => {
+        const transactions = transactionData.filter(
+          (trans) => trans.crypto === crypto.name
+        );
+        const balance =
+          crypto.balance -
+          transactions.reduce((acc, curr) => {
+            return curr.type === "Compra" ? acc + curr.amount : acc - curr.amount;
+          }, 0);
+        return { ...crypto, balance };
+      });
+      setCryptoBalances(balances);
+    }
     setTransactions(transactionData);
-  }, []);
+  }, [cryptoData, transactionData]);
+
+  console.log(cryptoBalances)
 
   const renderTransactionIcon = (type) => {
     if (type === "Compra") {

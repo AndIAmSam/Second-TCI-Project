@@ -19,9 +19,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Feather } from "@expo/vector-icons";
 import ThemeSwitch from "../components/ThemeSwitch";
 
+import { useAuth } from "../context/AuthContext";
+
 const Profile = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [profilePic, setProfilePic] = useState(null);
+  const { email } = useAuth();
 
   useEffect(() => {
     const loadProfilePic = async () => {
@@ -54,8 +57,8 @@ const Profile = () => {
   };
 
   const userData = {
-    username: "AndIAmSam",
-    email: "sam@sam.com",
+    username: email,
+    email,
     phoneNumber: "+123456789",
     fullName: "Samuel Flores",
     profilePic: require("../assets/profile-pic.jpg"),

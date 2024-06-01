@@ -27,8 +27,8 @@ const SignIn = ({ navigation }) => {
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSignIn = (userType) => {
-    signIn(userType);
+  const handleSignIn = (userType, email) => {
+    signIn(userType, email);
   };
 
   const handleFingerprintLogin = async () => {
@@ -63,7 +63,7 @@ const SignIn = ({ navigation }) => {
         }
 
         console.log("Usuario login");
-        handleSignIn(result.user.userType);
+        handleSignIn(result.user.userType, formData.identifier);
         //changeForm();
       } catch (error) {
         console.log(error);
