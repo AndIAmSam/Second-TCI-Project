@@ -12,3 +12,8 @@ strapi{
     email: crypto@wallet.com
     pass: Strapi@crypto17
 }
+
+admin{
+    email: admin@crypto.wallet
+    pass: admin@crypto
+}
