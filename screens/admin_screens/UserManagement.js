@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { ThemeContext } from "../../context/ThemeContext";
 import SecondBlur from "../../components/SecondBlur";
+import { Picker } from "@react-native-picker/picker";
 
 const UserManagement = () => {
   const { theme } = useContext(ThemeContext);
@@ -91,6 +92,8 @@ const UserManagement = () => {
     ));
   };
 
+  const [typeUser, setTypeUser] = useState("");
+
   return (
     <>
       <SecondBlur />
@@ -149,7 +152,7 @@ const UserManagement = () => {
               ]}
             >
               <Text style={[styles.modalTitle, { color: theme.textColor }]}>
-                Editar Información
+                Información
               </Text>
               <TextInput
                 style={[
@@ -170,6 +173,20 @@ const UserManagement = () => {
                 onChangeText={setNewEmail}
                 keyboardType="email-address"
               />
+              <Text style={[styles.modalTitle2, { color: theme.textColor }]}>
+                Tipo de usuario
+              </Text>
+              <Picker
+                selectedValue={typeUser}
+                onValueChange={(newType) => setTypeUser(newType)}
+                style={[
+                  styles.input,
+                  { color: theme.textColor, backgroundColor: theme.cardColor },
+                ]}
+              >
+                <Picker.Item label="admin" value="admin" key="admin" />
+                <Picker.Item label="usuario" value="usuario" key="usuario" />
+              </Picker>
               <Text style={[styles.modalTitle, { color: theme.textColor }]}>
                 Balances
               </Text>
@@ -278,7 +295,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   modalTitle: {
-    fontSize: 24,
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  modalTitle2: {
+    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",

@@ -14,6 +14,7 @@ export const ThemeProvider = ({ children }) => {
     iconBackgroundColor: "#d9d9d9",
     cardColor: "rgba(249,249,249,0.5)",
     buttonConfirmColor: "rgba(0, 113, 227, 0.6)",
+    modalBackground: "rgba(255, 255, 255, 1)",
     buttonCancelColor: "#ff4d4f",
     blurBackground: "#fff",
   };
