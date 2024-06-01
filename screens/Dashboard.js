@@ -7,26 +7,24 @@ import SecondBlur from "../components/SecondBlur";
 import { useAuth } from "../context/AuthContext";
 import { API_URL } from "../api/constants";
 
-
 async function getCryptoData(email) {
-  try{
+  try {
     const url = `${API_URL}/balances?email=${email}`;
     const params = {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json'
-      }
-    }
+        "Content-Type": "application/json",
+      },
+    };
     const response = await fetch(url, params);
     const result = await response.json();
+    console.log(result[0].cryptos);
     return result[0].cryptos;
-  } catch(error) {
+  } catch (error) {
     console.log(error);
     return null;
   }
-
 }
-
 
 let cryptoData = [
   { id: 1, name: "Bitcoin", balance: 2.5 },
@@ -35,7 +33,6 @@ let cryptoData = [
   { id: 4, name: "Ripple", balance: 500 },
   { id: 5, name: "Cardano", balance: 120 },
 ];
-
 
 const transactionData = [
   {
@@ -91,24 +88,31 @@ const Dashboard = () => {
   cryptoData = getCryptoData(email);
 
   useEffect(() => {
-    if (cryptoData.length > 0) {
-      const balances = cryptoData.map((crypto) => {
-        const transactions = transactionData.filter(
-          (trans) => trans.crypto === crypto.name
-        );
-        const balance =
-          crypto.balance -
-          transactions.reduce((acc, curr) => {
-            return curr.type === "Compra" ? acc + curr.amount : acc - curr.amount;
-          }, 0);
-        return { ...crypto, balance };
-      });
-      setCryptoBalances(balances);
-    }
-    setTransactions(transactionData);
-  }, [cryptoData, transactionData]);
+    const fetchCryptoData = async () => {
+      const data = await getCryptoData(email);
+      if (data) {
+        const balances = data.map((crypto) => {
+          const transactions = transactionData.filter(
+            (trans) => trans.crypto === crypto.name
+          );
+          const balance =
+            crypto.balance -
+            transactions.reduce((acc, curr) => {
+              return curr.type === "Compra"
+                ? acc + curr.amount
+                : acc - curr.amount;
+            }, 0);
+          return { ...crypto, balance };
+        });
+        setCryptoBalances(balances);
+      }
+    };
+    fetchCryptoData();
+  }, [email]);
 
-  console.log(cryptoBalances)
+  useEffect(() => {
+    console.log(cryptoBalances);
+  }, [cryptoBalances]);
 
   const renderTransactionIcon = (type) => {
     if (type === "Compra") {
@@ -148,9 +152,9 @@ const Dashboard = () => {
             </View>
           )}
         />
-        <Text style={[styles.transactionsHeading, { color: theme.title }]}>
+        {/* <Text style={[styles.transactionsHeading, { color: theme.title }]}>
           Transacciones Recientes
-        </Text>
+        </Text> */}
         <FlatList
           data={transactions}
           keyExtractor={(item) => item.id.toString()}
@@ -202,7 +206,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 40,
     marginBottom: 30,
-    textTransform: "uppercase",
   },
   cryptoContainer: {
     marginLeft: 10,
@@ -213,16 +216,16 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     flexDirection: "column",
     alignItems: "center",
+    justifyContent: "center",
     width: 150,
+    height: 'auto',
   },
   cryptoName: {
     fontSize: 18,
     fontWeight: "bold",
   },
   balance: {
-    fontSize: 16,
-    marginBottom: 20,
-  },
+    fontSize: 16,  },
   transactionsHeading: {
     fontSize: 20,
     fontWeight: "bold",

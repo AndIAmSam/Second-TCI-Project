@@ -162,14 +162,14 @@ const Profile = () => {
               {userData.username}
             </Text>
           </View>
-          <View style={styles.row}>
+          {/* <View style={styles.row}>
             <Text style={[styles.label, { color: theme.textColor }]}>
               Nombre:
             </Text>
             <Text style={[styles.text, { color: theme.textColor }]}>
               {userData.fullName}
             </Text>
-          </View>
+          </View> */}
           <View style={styles.row}>
             <Text style={[styles.label, { color: theme.textColor }]}>
               Correo:
@@ -178,14 +178,14 @@ const Profile = () => {
               {userData.email}
             </Text>
           </View>
-          <View style={styles.row}>
+          {/* <View style={styles.row}>
             <Text style={[styles.label, { color: theme.textColor }]}>
               Teléfono:
             </Text>
             <Text style={[styles.text, { color: theme.textColor }]}>
               {userData.phoneNumber}
             </Text>
-          </View>
+          </View> */}
         </View>
         <Text style={[styles.subtitle, { color: theme.textColor }]}>
           Tarjeta asociada a tu Cuenta

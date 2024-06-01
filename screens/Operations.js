@@ -32,34 +32,25 @@ const Operations = () => {
   };
 
   const handleConfirm = () => {
-    if (action === "buy") {
-      Alert.alert(
-        "Operación completada",
-        `Compraste ${amount} ${selectedCrypto.name}`,
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }]
-      );
-      console.log(
-        `Comprando ${amount} ${selectedCrypto.name} usando ${paymentMethod}`
-      );
-      setSelectedCrypto("");
+    if (selectedCrypto && action) {
+      const { name } = selectedCrypto;
+      if (action === "buy") {
+        Alert.alert("Operación completada", `Compraste ${amount} ${name}`, [
+          { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
+        console.log(`Comprando ${amount} ${name} usando ${paymentMethod}`);
+      } else if (action === "sell") {
+        Alert.alert("Operación completada", `Vendiste ${amount} ${name}`, [
+          { text: "OK", onPress: () => console.log("OK Pressed") },
+        ]);
+        console.log(`Vendiendo ${amount} ${name} usando ${paymentMethod}`);
+      }
+      setSelectedCrypto(null);
       setAmount("");
       setPaymentMethod("");
       setAction("");
-    } else if (action === "sell") {
-      Alert.alert(
-        "Operación completada",
-        `Vendiste ${amount} ${selectedCrypto.name}`,
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }]
-      );
-      console.log(
-        `Vendiendo ${amount} ${selectedCrypto.name} usando ${paymentMethod}`
-      );
-      setSelectedCrypto("");
-      setAmount("");
-      setPaymentMethod("");
-      setAction("");
+      setShowModal(false);
     }
-    setShowModal(false);
   };
 
   return (
