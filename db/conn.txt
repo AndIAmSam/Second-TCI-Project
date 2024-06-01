@@ -1,0 +1,14 @@
+user: admin
+pass: DFC148i8Ek16RYV8
+
+
+azureVM
+user: crypto-wallet
+pass: azure@crypto17
+
+strapi{
+    first_name: crypto
+    last_name: wallet
+    email: crypto@wallet.com
+    pass: Strapi@crypto17
+}

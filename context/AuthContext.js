@@ -13,8 +13,12 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
   };
 
+  const register = (formData) => {
+
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, signIn, signOut }}>
+    <AuthContext.Provider value={{ isAuthenticated, signIn, signOut, register }}>
       {children}
     </AuthContext.Provider>
   );

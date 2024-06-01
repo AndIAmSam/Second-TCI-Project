@@ -12,6 +12,10 @@ import {
 } from "react-native";
 import { useAuth } from "../context/AuthContext";
 
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import { registerAPI } from '../api/formAPI'
+
 const SignIn = ({ navigation }) => {
   const { height } = Dimensions.get("window");
 
@@ -20,6 +24,44 @@ const SignIn = ({ navigation }) => {
   const handleSignIn = () => {
     signIn();
   };
+
+
+  // all about formik to check for data
+  const formik = useFormik({
+    initialValues: initialValues(),
+    validationSchema: Yup.object(validationSchema()),
+    onSubmit: async (formData) => {
+        console.log(formData);
+        try {
+            const result = await registerAPI(formData);
+            
+            if(result.statusCode) throw 'Error al crear usuario';
+
+            console.log('Usuario creado');
+            handleSignIn();
+            //changeForm();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+  });
+
+  function initialValues() {
+    return {
+        email: '',
+        username: '',
+        password: '',
+        repeatPassword: ''
+    }
+  }
+
+  function validationSchema() {
+    return {
+        email: Yup.string().email().required(true),
+        password: Yup.string().required(true),
+        repeatPassword: Yup.string().required(true).oneOf([Yup.ref('password')])
+    }
+  }
 
   return (
     <>
@@ -30,18 +72,45 @@ const SignIn = ({ navigation }) => {
             {/* <Text style={styles.body}>Register</Text> */}
 
             <TextInput
-              style={styles.input}
-              placeholder="Enter username"
+              style={[
+                styles.input,
+                formik.errors.email && styles.errorInput]}
+              placeholder="Enter email"
               autoCorrect={false}
+              // formik
+              onChangeText={(text) => {formik.setFieldValue('email', text);
+                                      formik.setFieldValue('username', text)}}
+              value={formik.values.email}
+              error={formik.errors.email}
             />
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                formik.errors.password && styles.errorInput]}
               placeholder="Password"
               autoCorrect={false}
               secureTextEntry={true}
+
+              // formik
+              onChangeText={(text) => formik.setFieldValue('password', text)}
+              value={formik.values.password}
+              error={formik.errors.password}
+            />
+            <TextInput
+              style={[
+                styles.input,
+                formik.errors.repeatPassword && styles.errorInput]}
+              placeholder="Repeat password"
+              autoCorrect={false}
+              secureTextEntry={true}
+
+              // formik
+              onChangeText={(text) => formik.setFieldValue('repeatPassword', text)}
+            value={formik.values.repeatPassword}
+            error={formik.errors.repeatPassword}
             />
 
-            <TouchableOpacity style={styles.signInButton} onPress={handleSignIn}>
+            <TouchableOpacity style={styles.signInButton} /*onPress={handleSignIn}*/ onPress={formik.handleSubmit}>
               <Text style={{ color: "white", fontWeight: "bold" }}>
                 Register
               </Text>
@@ -155,5 +224,9 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.44,
     shadowRadius: 10.32,
+  },
+  errorInput: {
+    borderColor: 'red',
+    borderWidth: 3,
   },
 });

@@ -13,6 +13,10 @@ import {
 import { useAuth } from "../context/AuthContext";
 import * as LocalAuthentication from "expo-local-authentication";
 
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import { loginAPI } from '../api/formAPI'
+
 const SignIn = ({ navigation }) => {
   const { height } = Dimensions.get("window");
 
@@ -43,6 +47,40 @@ const SignIn = ({ navigation }) => {
     }
   };
 
+  // all about formik to check for data
+  const formik = useFormik({
+    initialValues: initialValues(),
+    validationSchema: Yup.object(validationSchema()),
+    onSubmit: async (formData) => {
+        console.log(formData);
+        try {
+            const result = await loginAPI(formData);
+
+            if(result.statusCode) throw 'El usuario/pass no existe';
+
+            console.log('Usuario login');
+            handleSignIn();
+            //changeForm();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+  });
+
+  function initialValues() {
+    return {
+        identifier: '',
+        password: '',
+    }
+  }
+
+  function validationSchema() {
+    return {
+        identifier: Yup.string().email().required(true),
+        password: Yup.string().required(true),    
+    }
+  }
+
   return (
     <>
       <SafeAreaView style={styles.container}>
@@ -51,19 +89,33 @@ const SignIn = ({ navigation }) => {
             <Text style={styles.title}>Sign In</Text>
             {/* <Text style={styles.body}>SignIn</Text> */}
             <TextInput
-              style={styles.input}
-              placeholder="Enter username"
+              style={[
+                styles.input,
+                formik.errors.identifier && styles.errorInput,]}
+              placeholder="Enter email"
               autoCorrect={false}
-              value={username}
-              onChangeText={setUsername}
+              //value={username}
+              //onChangeText={setUsername}
+
+              // formik
+              onChangeText={(text) => formik.setFieldValue('identifier', text)}
+              value={formik.values.identifier}
+              error={formik.errors.identifier}
             />
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                formik.errors.password && styles.errorInput]}
               placeholder="Password"
               autoCorrect={false}
               secureTextEntry={true}
-              value={password}
-              onChangeText={setPassword}
+              //value={password}
+              //onChangeText={setPassword}
+
+              // formik
+              onChangeText={(text) => formik.setFieldValue('password', text)}
+              value={formik.values.password}
+              error={formik.errors.password}
             />
 
             <TouchableOpacity>
@@ -79,7 +131,8 @@ const SignIn = ({ navigation }) => {
 
             <TouchableOpacity
               style={styles.signInButton}
-              onPress={handleSignIn}
+              //onPress={handleSignIn}
+              onPress={formik.handleSubmit}
             >
               <Text style={{ color: "white", fontWeight: "bold" }}>
                 Sign In
@@ -217,5 +270,10 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.44,
     shadowRadius: 10.32,
+  },
+  errorInput: {
+    borderColor: 'red',
+    borderWidth: 3,
+    // any other styles you want to apply when there's an error
   },
 });
