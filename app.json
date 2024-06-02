@@ -32,6 +32,13 @@
         "projectId": "b57aa19e-19f5-433e-b033-7873ce8bf314"
       }
     },
-    "owner": "andiamsam"
+    "owner": "andiamsam",
+    "plugins": [
+      ["expo-build-properties", {
+        "android": {
+          "usesCleartextTraffic": true
+        }
+      }]
+    ]
   }
 }

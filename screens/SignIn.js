@@ -160,14 +160,14 @@ const SignIn = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.fingerprintButton}
               onPress={handleFingerprintLogin}
             >
               <Text style={{ color: "white", fontWeight: "bold" }}>
                 Enter with your Fingerprint/Face
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {/* <Text style={{ textAlign: "center" }}>Or continue with</Text>
 
