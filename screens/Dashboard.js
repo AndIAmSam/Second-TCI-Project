@@ -18,7 +18,7 @@ async function getCryptoData(email) {
     };
     const response = await fetch(url, params);
     const result = await response.json();
-    console.log(result[0].cryptos);
+    //console.log(result[0].cryptos);
     return result[0].cryptos;
   } catch (error) {
     console.log(error);
@@ -102,12 +102,13 @@ const Dashboard = () => {
             (trans) => trans.crypto === crypto.name
           );
           const balance =
-            crypto.balance -
+            crypto.balance /*-
             transactions.reduce((acc, curr) => {
               return curr.type === "Compra"
                 ? acc + curr.amount
                 : acc - curr.amount;
             }, 0);
+            */
           return { ...crypto, balance };
         });
         setCryptoBalances(balances);
@@ -117,9 +118,11 @@ const Dashboard = () => {
     fetchCryptoData();
   }, [email, forceRender]);
 
+  /*
   useEffect(() => {
     console.log(cryptoBalances);
   }, [cryptoBalances]);
+  */
 
   const renderTransactionIcon = (type) => {
     if (type === "Compra") {
