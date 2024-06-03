@@ -3,7 +3,7 @@ import { API_URL } from "./constants";
 export async function loginAPI(formData){
     try{
         const url = `${API_URL}/auth/local`;
-    
+
         const params = {
             method: 'POST',
             headers: {
@@ -14,7 +14,7 @@ export async function loginAPI(formData){
 
         const response = await fetch(url, params);
         const result = await response.json();
-        console.log(result);
+        //console.log(result);
         return result;
     } catch(error) {
         console.log(error);
