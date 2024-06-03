@@ -119,7 +119,7 @@ const MainStack = () => {
             ),
           }}
         />
-        {/* <Tab.Screen
+        <Tab.Screen
           name="Transactions"
           component={Transactions}
           options={{
@@ -127,7 +127,7 @@ const MainStack = () => {
               <FontAwesome6 name="money-check" size={24} color={color} />
             ),
           }}
-        /> */}
+        />
         <Tab.Screen
           name="Operations"
           component={Operations}
