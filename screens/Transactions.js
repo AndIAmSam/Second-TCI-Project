@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -13,11 +13,63 @@ import { ThemeContext } from "../context/ThemeContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import SecondBlur from "../components/SecondBlur";
 
+import { useAuth } from "../context/AuthContext";
+import { API_URL } from "../api/constants";
+
 const Transactions = () => {
   const { theme } = useContext(ThemeContext);
   const [recipient, setRecipient] = useState("");
   const [crypto, setCrypto] = useState("");
   const [amount, setAmount] = useState("");
+
+  const [wallet, setWallet] = useState(null);
+  const [userId, setId] = useState(null);
+
+  const [recipientId, setRecipientId] = useState(null);
+  const [recipientWallet, setRecipientWallet] = useState(null);
+
+  const { email } = useAuth();
+
+  async function getCryptoData(email) {
+    try {
+      const url = `${API_URL}/balances?email=${email}`;
+      const params = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const response = await fetch(url, params);
+      const result = await response.json();
+      if(result.length === 0) {
+        return [null, null];
+      }
+      return [result[0].cryptos, result[0]._id];
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+
+
+  async function updateCryptoData(id, newCryptosData) {
+    try {
+      const url = `${API_URL}/balances/${id}`;
+      const params = {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cryptos: newCryptosData }),
+      };
+      const response = await fetch(url, params);
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
 
   const cryptocurrencies = [
     { label: "Bitcoin", value: "Bitcoin" },
@@ -28,7 +80,99 @@ const Transactions = () => {
     { label: "Tether", value: "Tether" },
   ];
 
-  const handleSendTransaction = () => {
+  const handleSendTransaction = async () => {
+    console.log("\n")
+    console.log("***transaction***");
+    if (recipient && crypto && amount) {
+
+      const [walletData, userId] = await getCryptoData(email);
+      setWallet(walletData);
+      setId(userId);
+
+      const [recipientWalletData, recipientId] = await getCryptoData(recipient);
+      setRecipientWallet(recipientWalletData);
+      setRecipientId(recipientId);
+
+      if(recipientId === null) {
+        Alert.alert(
+          "Error",
+          "El destinatario no existe",
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+        );
+        return;
+      }
+
+      let updatedWallet = [...walletData];
+      let success = true;
+
+      console.log("\nBEFORE:");
+      console.log(updatedWallet);
+      console.log("\n");
+
+      updatedWallet = updatedWallet.map((cryptoWallet) => {
+        //console.log(cryptoWallet);
+        if (cryptoWallet.name.toLowerCase() === crypto.toLowerCase()) {
+          const newBalance = cryptoWallet.balance - amount;
+            if (newBalance < 0) success = false
+            return { ...cryptoWallet, balance: newBalance };
+        }
+        return cryptoWallet;
+      });
+
+      if(!success) {
+        Alert.alert(
+          "Error",
+          "No tienes suficientes fondos para realizar esta transacción",
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+        );
+        return;
+      }
+
+      setWallet(updatedWallet);
+
+      console.log("\nAFTER:");
+      console.log(updatedWallet);
+      console.log("\n");
+
+      let updatedRecipientWallet = [...recipientWalletData];
+      console.log("\n");
+      //console.log(updatedRecipientWallet);
+      console.log("\n");
+
+      updatedRecipientWallet = updatedRecipientWallet.map((cryptoWallet) => {
+        if (cryptoWallet.name.toLowerCase() === crypto.toLowerCase()) {
+          const newBalance = Number(cryptoWallet.balance) + Number(amount);
+          return { ...cryptoWallet, balance: newBalance };
+        }
+        return cryptoWallet;
+      });
+
+      setRecipientWallet(updatedRecipientWallet);
+
+      try {
+        const newCryptosData = updatedWallet.map((crypto) => ({
+          id: crypto.id,
+          balance: crypto.balance,
+          name: crypto.name,
+        }));
+
+        await updateCryptoData(userId, newCryptosData);
+      } catch (error) {
+        console.log(error);
+      }
+
+      try {
+        const newCryptosData = updatedRecipientWallet.map((crypto) => ({
+          id: crypto.id,
+          balance: crypto.balance,
+          name: crypto.name,
+        }));
+
+        await updateCryptoData(recipientId, newCryptosData);
+      } catch (error) {
+        console.log(error);
+      }
+
     Alert.alert(
       "Transacción Enviada",
       `Se han enviado ${amount} ${crypto} a ${recipient}`,
@@ -42,6 +186,8 @@ const Transactions = () => {
     console.log("Enviando criptomonedas a:", recipient);
     console.log("Tipo de criptomoneda:", crypto);
     console.log("Cantidad:", amount);
+    }
+    console.log("end");
   };
 
   return (
