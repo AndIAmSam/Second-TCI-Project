@@ -27,18 +27,20 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
+    ],
     "extra": {
       "eas": {
-        "projectId": "b57aa19e-19f5-433e-b033-7873ce8bf314"
+        "projectId": "9bd5cc02-bbc2-4429-8586-1fc79e4e55ae"
       }
-    },
-    "owner": "andiamsam",
-    "plugins": [
-      ["expo-build-properties", {
-        "android": {
-          "usesCleartextTraffic": true
-        }
-      }]
-    ]
+    }
   }
 }
