@@ -72,7 +72,6 @@ const Operations = () => {
   };
 
   async function updateCryptoData(id, newCryptosData) {
-    console.log(id);
     try {
       const url = `${API_URL}/balances/${id}`;
       const params = {
@@ -82,10 +81,8 @@ const Operations = () => {
         },
         body: JSON.stringify({ cryptos: newCryptosData }),
       };
-      console.log(params);
       const response = await fetch(url, params);
       const result = await response.json();
-      console.log("Resultado" + result);
       return result;
     } catch (error) {
       console.log(error);
@@ -94,14 +91,17 @@ const Operations = () => {
   }
 
   const handleConfirm = async () => {
+    console.log("\noperation");
     if (selectedCrypto && action) {
       const { id, name } = selectedCrypto;
       const numericAmount = parseFloat(amount.replace("$", ""));
-      let updatedWallet = [...wallet];
+      //let updatedWallet = [...wallet];
+      let success = true;
+
+      const [walletData, userId] = await getCryptoData(email);
+      let updatedWallet = [...walletData];
 
       updatedWallet = updatedWallet.map((crypto) => {
-        console.log(crypto.name);
-        console.log(id);
         if (crypto.name.toLowerCase() === id.toLowerCase()) {
           const newBalance =
             action === "buy"
@@ -109,6 +109,7 @@ const Operations = () => {
               : crypto.balance - numericAmount;
 
           if (newBalance < 0) {
+            success = false;
             Alert.alert(
               "Error",
               "No tienes suficientes fondos para esta venta"
@@ -140,7 +141,7 @@ const Operations = () => {
           { text: "OK", onPress: () => console.log("OK Pressed") },
         ]);
         console.log(`Comprando ${amount} ${name} usando`);
-      } else if (action === "sell") {
+      } else if (action === "sell" && success === true) {
         Alert.alert("Operación completada", `Vendiste ${amount} ${name}`, [
           { text: "OK", onPress: () => console.log("OK Pressed") },
         ]);
