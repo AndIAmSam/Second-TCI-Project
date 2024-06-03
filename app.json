@@ -4,7 +4,7 @@
     "slug": "tci-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/cryptologo.jpeg",
+    "icon": "./assets/cryptologo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/cryptologo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.andiamsam.tciapp"
