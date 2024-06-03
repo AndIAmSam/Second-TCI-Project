@@ -54,7 +54,7 @@ const SignIn = ({ navigation }) => {
     initialValues: initialValues(),
     validationSchema: Yup.object(validationSchema()),
     onSubmit: async (formData) => {
-      console.log(formData);
+      //console.log(formData);
       try {
         const result = await loginAPI(formData);
 
@@ -62,7 +62,7 @@ const SignIn = ({ navigation }) => {
           throw new Error("El usuario no existe");
         }
 
-        console.log("Usuario login");
+        //console.log("Usuario login");
         handleSignIn(result.user.userType, formData.identifier);
         //changeForm();
       } catch (error) {
