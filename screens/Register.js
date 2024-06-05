@@ -15,7 +15,9 @@ import { useAuth } from "../context/AuthContext";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { registerAPI } from "../api/formAPI";
-import { API_URL } from "../api/constants";
+import { API_URL, IMG_FOOTER } from "../api/constants";
+
+import { sendEmail } from "../api/emailAPI";
 
 const SignIn = ({ navigation }) => {
   const { height } = Dimensions.get("window");
@@ -24,6 +26,18 @@ const SignIn = ({ navigation }) => {
 
   const handleSignIn = (email) => {
     signIn('user', email);
+
+    const data = {
+      address: email,
+      subject: "Bienvenido a Crypto Wallet",
+      message: `¡Bienvenido a Crypto Wallet!<br><br>
+      Gracias por unirte a nuestra comunidad. Estamos emocionados de tenerte con nosotros.<br><br>
+      ¡Feliz trading!<br><br>
+      Saludos,<br>
+      El equipo de Crypto Wallet.<br>
+      ${IMG_FOOTER}`
+    }
+    sendEmail(data);
   };
 
   async function createBalance (email) {
@@ -54,7 +68,6 @@ const SignIn = ({ navigation }) => {
     initialValues: initialValues(),
     validationSchema: Yup.object(validationSchema()),
     onSubmit: async (formData) => {
-      console.log(formData);
       try {
         const result = await registerAPI(formData);
 

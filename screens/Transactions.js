@@ -14,7 +14,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import SecondBlur from "../components/SecondBlur";
 
 import { useAuth } from "../context/AuthContext";
-import { API_URL } from "../api/constants";
+import { API_URL, IMG_FOOTER } from "../api/constants";
+
+import { sendEmail } from "../api/emailAPI";
 
 const Transactions = () => {
   const { theme } = useContext(ThemeContext);
@@ -186,6 +188,38 @@ const Transactions = () => {
     console.log("Enviando criptomonedas a:", recipient);
     console.log("Tipo de criptomoneda:", crypto);
     console.log("Cantidad:", amount);
+
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2); // Months are 0-based in JavaScript
+    const day = ("0" + date.getDate()).slice(-2);
+    const formattedDate = `${day}/${month}/${year}`;
+    console.log(formattedDate);
+
+    let data = {
+      address: email,
+      subject: "Crypto Wallet - Notificación de Transferencia",
+      message: `Apreciable usuario,<br><br>
+      Le informamos que recibimos su solicitud para realizar una transferencia a la cuenta <strong>${recipient}</strong>
+      por un importe de <strong>${amount}</strong> unidades de <strong>${crypto}</strong> el <strong>${formattedDate}</strong>.<br><br>
+      Atentamente,<br>
+      El equipo de Crypto Wallet.<br>
+      ${IMG_FOOTER}`
+    }
+    sendEmail(data);
+
+    data = {
+      address: recipient,
+      subject: "Crypto Wallet - Has recibido una Transferencia",
+      message: `Apreciable usuario,<br><br>
+      Te informamos que recibiste una transferencia de la cuenta <strong>${email}</strong>
+      por un importe de <strong>${amount}</strong> unidades de <strong>${crypto}</strong> el <strong>${formattedDate}</strong>.<br><br>
+      El depósito ya se encuentra disponible en tu cuenta.<br><br>
+      Atentamente,<br>
+      El equipo de Crypto Wallet.<br>
+      ${IMG_FOOTER}`
+    }
+    sendEmail(data);
     }
     console.log("end");
   };
