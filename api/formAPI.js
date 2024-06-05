@@ -14,7 +14,6 @@ export async function loginAPI(formData){
 
         const response = await fetch(url, params);
         const result = await response.json();
-        //console.log(result);
         return result;
     } catch(error) {
         console.log(error);
@@ -36,12 +35,8 @@ export async function registerAPI(formData){
             },
             body: JSON.stringify(formData)
         }
-
-        console.log(params);
-
         const response = await fetch(url, params);
         const result = await response.json();
-        console.log(result);
         return result;
     } catch(error) {
         console.log(error);
